@@ -1,13 +1,17 @@
+import { IconLanguage } from '@douyinfe/semi-icons';
 import { IconGithubLogo, IconMoon, IconSun } from '@douyinfe/semi-icons';
 import { Avatar, Button, Dropdown, Nav, Space } from '@douyinfe/semi-ui';
 import { useEffect, useState } from 'react';
+import { Lang } from '../../type.d.ts/Lang';
 
 enum ThemeType {
     LIGHT = "light",
     DARK = "dark"
 }
 
-export default () => {
+
+
+export default (lang: Lang) => {
 
     const getTheme = () => {
         // get theme, default light
@@ -59,7 +63,14 @@ export default () => {
                         onSwitchMode()
                     }}>
                     </Button>
-                    <Dropdown
+                    <Button type="tertiary" theme="borderless"
+                        onClick={() => {
+                            lang.setLang(lang.lang === "zh" ? 'en' : 'zh')
+                        }}
+                        icon={<IconLanguage style={{ color: "#333" }} />}>
+                        {lang.lang === 'zh' ? 'EN': '中文'}
+                    </Button>
+                    {/* <Dropdown
                         position="bottomRight"
                         render={
                             <Dropdown.Menu>
@@ -70,7 +81,7 @@ export default () => {
                     >
                         <Avatar size="small" color='light-blue' style={{ margin: 4 }}>BD</Avatar>
                         <span>联系作者</span>
-                    </Dropdown>
+                    </Dropdown> */}
                 </Space>
             }
         />
