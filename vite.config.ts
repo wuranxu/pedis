@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import semi from "vite-plugin-semi-theme";
+// @ts-ignore
 const path = require("path")
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,4 +21,5 @@ export default defineConfig({
       { find: '@', replacement: path.resolve(__dirname, '/src') }
     ],
   },
+  base: './'
 })

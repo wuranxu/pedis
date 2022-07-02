@@ -1,14 +1,10 @@
-import { IconLanguage } from '@douyinfe/semi-icons';
-import { IconGithubLogo, IconMoon, IconSun } from '@douyinfe/semi-icons';
-import { Avatar, Button, Dropdown, Nav, Space } from '@douyinfe/semi-ui';
+import Icon, { IconCoinMoneyStroked, IconGithubLogo, IconLanguage, IconMoon, IconSun } from '@douyinfe/semi-icons';
+import { Button, Nav, Space } from '@douyinfe/semi-ui';
 import { useEffect, useState } from 'react';
+import intl from 'react-intl-universal';
+import logo from '../../../assets/logo.svg';
 import { Lang } from '../../type.d.ts/Lang';
-
-enum ThemeType {
-    LIGHT = "light",
-    DARK = "dark"
-}
-
+import { ThemeType } from '../../type.d.ts/theme';
 
 
 export default (lang: Lang) => {
@@ -46,16 +42,18 @@ export default (lang: Lang) => {
         <Nav
             mode='horizontal'
             header={{
-                logo: <img src="https://sf6-cdn-tos.douyinstatic.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/root-web-sites/webcast_logo.svg" />,
+                logo: <img src={logo} />,
                 text: 'Pedis'
             }}
             footer={
                 <Space spacing={[24, 16]}>
-                    <Button type="tertiary" theme='borderless' icon={<IconGithubLogo />}>
+                    <Button type="tertiary" theme='borderless' icon={<IconGithubLogo />} onClick={() => {
+                        window.open("https://github.com/wuranxu/pedis")
+                    }}>
                         Github
                     </Button>
                     <Button type="primary" theme='borderless'>
-                        系统设置
+                        {intl.get("menu.settings")}
                     </Button>
                     <Button icon={
                         mode === 'dark' ? <IconSun style={{ color: '#9C27B0' }} /> : <IconMoon style={{ color: '#6700ff' }} />
@@ -63,12 +61,15 @@ export default (lang: Lang) => {
                         onSwitchMode()
                     }}>
                     </Button>
+                    <Button type="danger" theme='borderless' icon={<IconCoinMoneyStroked />}>
+                        {intl.get("menu.sponsor")}
+                    </Button>
                     <Button type="tertiary" theme="borderless"
                         onClick={() => {
                             lang.setLang(lang.lang === "zh" ? 'en' : 'zh')
                         }}
                         icon={<IconLanguage style={{ color: "#333" }} />}>
-                        {lang.lang === 'zh' ? 'EN': '中文'}
+                        {lang.lang === 'zh' ? 'EN' : '中文'}
                     </Button>
                     {/* <Dropdown
                         position="bottomRight"
