@@ -5,7 +5,7 @@ export interface ConnectionState {
 export default {
     namespace: 'connection',
     state: {
-
+        treeData: [],
     },
 
     reducers: {
@@ -14,7 +14,7 @@ export default {
                 ...state,
                 ...action.payload,
             }
-        }
+        },
     },
 
     effects: {

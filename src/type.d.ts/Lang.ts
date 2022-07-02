@@ -1,4 +1,6 @@
 export interface Lang {
     lang: string;
-    setLang: Function
+    setLang: Function;
+    dispatch?: any;
+    connection?: any;
 }

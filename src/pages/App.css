@@ -62,3 +62,15 @@ body[theme-mode=dark] .Resizer.vertical:hover {
 .Resizer.disabled:hover {
     border-color: transparent;
 }
+
+.leftTree {
+    height: 100%;
+}
+
+.emptyTree {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}

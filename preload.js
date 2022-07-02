@@ -1,5 +1,9 @@
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
+
+const { app, ipcRenderer, shell } = require('electron')
+
+
 window.addEventListener('DOMContentLoaded', () => {
   const replaceText = (selector, text) => {
     const element = document.getElementById(selector)
@@ -11,3 +15,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 })
 window.require = require;
+window.app = app
+window.ipcRenderer = ipcRenderer;
+window.shell = shell;

@@ -1,6 +1,7 @@
 {
     "common.ok": "Ok",
-    "common.failed": "failed",
+    "common.success": "Operate Success",
+    "common.failed": "Operate Failed",
     "common.confirm": "Confirm",
     "common.cancel": "Cancel",
     "menu.settings": "Settings",
@@ -10,6 +11,8 @@
     "empty.no_connection_desc": "Select tree node to use Redis!",
     "empty.see_document": "Document",
     "empty.new_connection": "New Connection",
+    "empty.no_connection_config": "No Connection Data",
+    "empty.no_connection_config.desc": "Click button bellow to add a connection!",
     "form.add_connection.title": "New Connection",
     "form.add_connection.edit_title": "Edit Connection -",
     "form.add_connection.name": "Name",
@@ -20,5 +23,9 @@
     "form.add_connection.port.placeholder": "Please input port number",
     "form.add_connection.password": "Password",
     "form.add_connection.password.placeholder": "Please input password",
-    "modal.connection.footer.test": "Connect"
+    "modal.connection.footer.test": "Connect",
+    "modal.connection.footer.test.success": "Connect Success.",
+    "modal.connection.footer.test.failed": "Connect Failed, Please check your connection information!",
+    "file.read_config.error": "Parse redis config error",
+    "file.save_config.error": "Save redis config error"
 }

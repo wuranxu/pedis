@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu, dialog} = require("electron");
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
 // const Log = require("electron-log");
 const path = require("path");
 // const ipcEvent = require("./modules/ipcEvent");
@@ -68,20 +68,18 @@ function createWindow() {
     // ipcEvent.init(mainWindow);
     // 最大化
     // mainWindow.maximize();
-    mainWindow.loadFile(path.join(__dirname, './dist/index.html'))
-    mainWindow.webContents.openDevTools();
+    // mainWindow.loadFile(path.join(__dirname, './dist/index.html'))
+    // mainWindow.webContents.openDevTools();
 
-    // if (!app.isPackaged) {
-    //     // 非打包状态，表示开发环境
-    //     mainWindow.loadURL("http://localhost:3000/");
-    //     // Open the DevTools.
-    //     mainWindow.webContents.openDevTools();
-    // } else {
-    //     // 打包状态，表示生产环境
-    //     mainWindow.loadURL(
-    //         `file://${__dirname}/index.html?version=${app.getVersion()}`
-    //     );
-    // }
+    if (!app.isPackaged) {
+        // 非打包状态，表示开发环境
+        mainWindow.loadURL("http://localhost:3000/");
+        // Open the DevTools.
+        mainWindow.webContents.openDevTools();
+    } else {
+        // 打包状态，表示生产环境
+        mainWindow.loadFile(path.join(__dirname, './dist/index.html'))
+    }
     // 关闭窗口
     mainWindow.on("closed", function () {
         mainWindow = null;
@@ -117,7 +115,13 @@ function createWindow() {
 
 app.allowRendererProcessReuse = false;
 
-app.on("ready", createWindow);
+app.whenReady().then(() => {
+    createWindow()
+    ipcMain.handle('get-file-path', async (event, ...args) => {
+        // event.sender.send("send-path", app.getPath("userData"))
+        return app.getPath("userData");
+    })
+});
 
 //关闭程序
 app.on("window-all-closed", function () {
@@ -135,3 +139,4 @@ app.on("gpu-process-crashed", function () {
     Log.error("[cmd=main] gpu-process-crashed");
     app.exit(0);
 });
+

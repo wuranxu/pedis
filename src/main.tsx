@@ -7,6 +7,7 @@ import en_GB from '@douyinfe/semi-ui/lib/es/locale/source/en_GB';
 
 import {LocaleProvider} from '@douyinfe/semi-ui';
 import Locale from './components/Locale';
+import dva from 'dva';
 
 const LocaleApp = () => {
 
@@ -31,7 +32,14 @@ const LocaleApp = () => {
     );
 }
 
+const app = dva();
+import connection from './models/connection';
+app.model(connection);
+app.router(() => <LocaleApp />);
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-    <LocaleApp/>
-)
+// 5. Start
+app.start('#root');
+
+// ReactDOM.createRoot(document.getElementById('root')!).render(
+//     <LocaleApp/>
+// )
