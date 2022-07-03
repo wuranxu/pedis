@@ -27,5 +27,11 @@
     "modal.connection.footer.test.success": "Connect Success.",
     "modal.connection.footer.test.failed": "Connect Failed, Please check your connection information!",
     "file.read_config.error": "Parse redis config error",
-    "file.save_config.error": "Save redis config error"
+    "file.save_config.error": "Save redis config error",
+    "tree.operation.test": "Test Connection",
+    "tree.operation.edit": "Edit Connection",
+    "tree.operation.delete": "Delete Connection",
+    "tree.operation.open": "Open Connection",
+    "connection.delete.title": "Are you sure to delete this connection?",
+    "connection.delete.content": "It's unable to resume, Please be serious!"
 }

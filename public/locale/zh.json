@@ -27,5 +27,12 @@
     "modal.connection.footer.test.success": "连接成功.",
     "modal.connection.footer.test.failed": "连接失败, 请检查连接信息!",
     "file.read_config.error": "读取Redis配置出错",
-    "file.save_config.error": "保存Redis配置出错"
+    "file.save_config.error": "保存Redis配置出错",
+    "tree.operation.test": "测试连接",
+    "tree.operation.edit": "编辑连接",
+    "tree.operation.delete": "删除连接",
+    "tree.operation.open": "打开连接",
+    "connection.delete.title": "你确定要删除此连接吗?",
+    "connection.delete.content": "该操作不可逆，请谨慎处理。"
+
 }

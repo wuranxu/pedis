@@ -33,6 +33,7 @@ const LeftTree = ({treeData}: TreeProps) => {
             expandAction="click"
             filterTreeNode
             blockNode
+            treeNodeFilterProp="search"
             showFilteredOnly={true}
             treeData={treeData}
         />

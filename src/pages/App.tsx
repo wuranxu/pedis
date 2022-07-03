@@ -1,4 +1,4 @@
-import { IconHelpCircle, IconPlus, IconServer } from '@douyinfe/semi-icons';
+import { IconHelpCircle, IconPlus } from '@douyinfe/semi-icons';
 import { IllustrationIdle, IllustrationIdleDark, IllustrationNoResult, IllustrationNoResultDark } from '@douyinfe/semi-illustrations';
 import { Button, Empty, Row } from '@douyinfe/semi-ui';
 import { connect } from 'dva';
@@ -23,11 +23,12 @@ function App({ lang, setLang, dispatch, connection }: Lang) {
   const [record, setRecord] = useState<Map<string, any>>(new Map<string, any>());
   const [visible, setVisible] = useState<boolean>(false);
   const { treeData } = connection;
+  
 
   const onLoadConfig = async () => {
     const data = await ConfigService.readConfig()
-    const treeData = tree.render(data, <IconServer />);
-    console.log(treeData)
+    console.log(data)
+    const treeData = tree.render(data, dispatch);
     dispatch({
       type: 'connection/save',
       payload: { treeData }
@@ -41,7 +42,7 @@ function App({ lang, setLang, dispatch, connection }: Lang) {
   // @ts-ignore
   return (
     <Row>
-      <ConnectionModal mode={mode} onClose={() => { setVisible(false) }} record={record} visible={visible} />
+      <ConnectionModal mode={mode} lang={lang} onClose={() => { setVisible(false) }} record={record} visible={visible} />
       <PedisHeader lang={lang} setLang={setLang} />
       {/*
         // @ts-ignore */}

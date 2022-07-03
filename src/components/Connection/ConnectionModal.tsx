@@ -1,4 +1,4 @@
-import { IconSend, IconServer } from '@douyinfe/semi-icons';
+import { IconSend } from '@douyinfe/semi-icons';
 import { Button, Form, Modal, Space, Toast } from '@douyinfe/semi-ui';
 import { connect } from 'dva';
 import uuid from "node-uuid";
@@ -17,6 +17,7 @@ interface ConnectionModalProps {
     onClose: (e: React.MouseEvent) => void;
     dispatch?: any;
     connection?: any;
+    lang: string
 }
 
 const ConnectionModal = ({ dispatch, mode, visible, connection, onClose }: ConnectionModalProps) => {
@@ -25,8 +26,9 @@ const ConnectionModal = ({ dispatch, mode, visible, connection, onClose }: Conne
     const onHandleSubmit = async (e: React.MouseEvent) => {
         const values = await form.validate()
         const data = await ConfigService.readConfig();
-        const now = [...data, { key: uuid.v4(), ...values }]
-        const treeData = tree.render(now, <IconServer />)
+        const key = uuid.v4();
+        const now = [...data, { key, ...values }]
+        const treeData = tree.render(now, dispatch)
         dispatch({
             type: 'connection/save',
             payload: {

@@ -1,4 +1,4 @@
-import Icon, { IconCoinMoneyStroked, IconGithubLogo, IconLanguage, IconMoon, IconSun } from '@douyinfe/semi-icons';
+import { IconCoinMoneyStroked, IconGithubLogo, IconLanguage, IconMoon, IconSetting, IconSun } from '@douyinfe/semi-icons';
 import { Button, Nav, Space } from '@douyinfe/semi-ui';
 import { useEffect, useState } from 'react';
 import intl from 'react-intl-universal';
@@ -52,17 +52,17 @@ export default (lang: Lang) => {
                     }}>
                         Github
                     </Button>
-                    <Button type="primary" theme='borderless'>
+                    <Button type="primary" theme='borderless' icon={<IconSetting />}>
                         {intl.get("menu.settings")}
+                    </Button>
+                    <Button type="danger" theme='borderless' icon={<IconCoinMoneyStroked />}>
+                        {intl.get("menu.sponsor")}
                     </Button>
                     <Button icon={
                         mode === 'dark' ? <IconSun style={{ color: '#9C27B0' }} /> : <IconMoon style={{ color: '#6700ff' }} />
                     } onClick={() => {
                         onSwitchMode()
                     }}>
-                    </Button>
-                    <Button type="danger" theme='borderless' icon={<IconCoinMoneyStroked />}>
-                        {intl.get("menu.sponsor")}
                     </Button>
                     <Button type="tertiary" theme="borderless"
                         onClick={() => {

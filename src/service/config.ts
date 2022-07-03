@@ -14,14 +14,16 @@ export default class ConfigService {
         return `${userDataPath}${path.sep}${Config.CONFIG_FILE}`
     }
 
-    static async readConfig() {
-        const filePath = await this.getConfigFile();
+    static async readConfig(filePath?: string | undefined) {
+        if (filePath === undefined) {
+            filePath = await this.getConfigFile();
+        }
         try {
             const stats = fs.existsSync(filePath);
             if (!stats) {
                 return [];
             }
-            const data: Array<any> = fs.readFileSync(filePath, 'utf-8')
+            const data: string = fs.readFileSync(filePath, 'utf-8')
             return JSON.parse(data);
         } catch (e) {
             console.log(e)
@@ -31,14 +33,42 @@ export default class ConfigService {
     }
 
     static async writeConfig(nodes: Array<any>) {
-        const filePath = await this.getConfigFile();
         console.log(nodes)
+        const filePath = await this.getConfigFile();
         try {
             fs.writeFileSync(filePath, JSON.stringify(nodes, null, 2), "utf-8");
+            return true;
         } catch (e) {
             console.log(e)
             Toast.warning(intl.get("file.save_config.error"))
+            return false;
         }
     }
 
 }
+
+export async function writeConfig(nodes: any) {
+    const filePath = await ConfigService.getConfigFile();
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(nodes, null, 2), "utf-8");
+        return true;
+    } catch (e) {
+        console.log(e)
+        Toast.warning(intl.get("file.save_config.error"))
+        return false;
+    }
+}
+
+export async function removeConfig(key: string) {
+    const filePath = await ConfigService.getConfigFile();
+    const data = await ConfigService.readConfig(filePath);
+    const now = data.filter((item: any) => key !== item.key)
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(now, null, 2), "utf-8");
+        return now;
+    } catch (e) {
+        Toast.warning(intl.get("file.save_config.error"))
+        return data;
+    }
+}
+
