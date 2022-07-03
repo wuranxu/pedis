@@ -1,7 +1,6 @@
 import { IconDelete, IconDesktop, IconEdit, IconMore, IconPlay, IconSend } from "@douyinfe/semi-icons";
 import { Col, Dropdown, Modal, Row, Toast, Typography } from '@douyinfe/semi-ui';
 import intl from 'react-intl-universal';
-import tree from '../utils/tree';
 
 
 
@@ -13,13 +12,12 @@ interface TreeNode {
     name: string;
     host: string;
     port: number;
+    password?: string;
     dispatch?: any;
 }
 
 
 const TreeLabel = (props: TreeNode) => {
-    console.log(props)
-
 
     const onDeleteNode = () => {
         Modal.warning({
@@ -37,6 +35,27 @@ const TreeLabel = (props: TreeNode) => {
                 Toast.error(intl.get("common.failed"));
             }
         });
+    }
+
+    const onTest = () => {
+        props.dispatch({
+            type: "connection/testConnection",
+            payload: props
+        })
+    }
+
+    const onEdit = () => {
+        props.dispatch({
+            type: 'connection/save',
+            payload: {
+                currentConnection: {
+                    uid: props.uid,
+                    password: props.password,
+                    name: props.name, port: props.port, host: props.host
+                },
+                visible: true,
+            }
+        })
     }
 
     return (
@@ -64,10 +83,16 @@ const TreeLabel = (props: TreeNode) => {
                                 }}>
                                     {intl.get("tree.operation.open")}
                                 </Dropdown.Item>
-                                <Dropdown.Item icon={<IconSend />}>
+                                <Dropdown.Item icon={<IconSend />} onClick={(e) => {
+                                    e.stopPropagation();
+                                    onTest()
+                                }}>
                                     {intl.get("tree.operation.test")}
                                 </Dropdown.Item>
-                                <Dropdown.Item type="primary" icon={<IconEdit />}>{intl.get("tree.operation.edit")}</Dropdown.Item>
+                                <Dropdown.Item type="primary" onClick={e => {
+                                    e.stopPropagation();
+                                    onEdit();
+                                }} icon={<IconEdit />}>{intl.get("tree.operation.edit")}</Dropdown.Item>
                                 <Dropdown.Item type="danger" onClick={(e) => {
                                     e.stopPropagation();
                                     onDeleteNode();

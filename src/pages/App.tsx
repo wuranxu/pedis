@@ -23,11 +23,10 @@ function App({ lang, setLang, dispatch, connection }: Lang) {
   const [record, setRecord] = useState<Map<string, any>>(new Map<string, any>());
   const [visible, setVisible] = useState<boolean>(false);
   const { treeData } = connection;
-  
+
 
   const onLoadConfig = async () => {
     const data = await ConfigService.readConfig()
-    console.log(data)
     const treeData = tree.render(data, dispatch);
     dispatch({
       type: 'connection/save',
@@ -42,7 +41,7 @@ function App({ lang, setLang, dispatch, connection }: Lang) {
   // @ts-ignore
   return (
     <Row>
-      <ConnectionModal mode={mode} lang={lang} onClose={() => { setVisible(false) }} record={record} visible={visible} />
+      <ConnectionModal mode={mode} lang={lang} />
       <PedisHeader lang={lang} setLang={setLang} />
       {/*
         // @ts-ignore */}
@@ -56,9 +55,11 @@ function App({ lang, setLang, dispatch, connection }: Lang) {
               title={intl.get("empty.no_connection_config")} description={intl.get("empty.no_connection_config.desc")}>
               <div style={{ textAlign: 'center' }}>
                 <Button onClick={() => {
-                  setVisible(true)
                   setMode("create")
-                  setRecord(new Map<string, any>);
+                  dispatch({
+                    type: 'connection/save',
+                    payload: {visible: true, currentConnection: {port: 6379}}
+                  })
                 }} type="secondary" icon={<IconPlus />} theme='light'>{intl.get("menu.create_conn")}</Button>
               </div>
             </Empty>
@@ -79,9 +80,11 @@ function App({ lang, setLang, dispatch, connection }: Lang) {
                   {intl.get("empty.see_document")}
                 </Button>
                 <Button style={{ padding: '0 24px' }} theme="solid" type="primary" icon={<IconPlus />} onClick={() => {
-                  setVisible(true)
                   setMode("create")
-                  setRecord(new Map<string, any>);
+                  dispatch({
+                    type: 'connection/save',
+                    payload: {visible: true, currentConnection: {port: 6379}}
+                  })
                 }}>
                   {intl.get("empty.new_connection")}
                 </Button>

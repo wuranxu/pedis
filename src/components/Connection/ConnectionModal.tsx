@@ -2,7 +2,7 @@ import { IconSend } from '@douyinfe/semi-icons';
 import { Button, Form, Modal, Space, Toast } from '@douyinfe/semi-ui';
 import { connect } from 'dva';
 import uuid from "node-uuid";
-import React from 'react';
+import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import ConfigService from '../../service/config';
 import RedisService from '../../service/redis';
@@ -12,22 +12,37 @@ declare type Mode = 'create' | 'update';
 
 interface ConnectionModalProps {
     mode: Mode | string;
-    record?: Map<String, any>;
-    visible: boolean;
-    onClose: (e: React.MouseEvent) => void;
     dispatch?: any;
     connection?: any;
     lang: string
 }
 
-const ConnectionModal = ({ dispatch, mode, visible, connection, onClose }: ConnectionModalProps) => {
+const ConnectionModal = ({ dispatch, mode, connection }: ConnectionModalProps) => {
     let form: any = null;
+
+    const { visible, currentConnection } = connection;
+
+    const onClose = () => {
+        dispatch({
+            type: 'connection/save',
+            payload: { visible: false }
+        })
+    }
 
     const onHandleSubmit = async (e: React.MouseEvent) => {
         const values = await form.validate()
         const data = await ConfigService.readConfig();
-        const key = uuid.v4();
-        const now = [...data, { key, ...values }]
+        let now;
+        if (currentConnection.uid) {
+            // update
+            const dest = data.findIndex((v: any) => v.key === currentConnection.uid);
+            data[dest] = { key: data[dest].key, ...values }
+            now = [...data]
+        } else {
+            // insert
+            const key = uuid.v4();
+            now = [...data, { key, ...values }]
+        }
         const treeData = tree.render(now, dispatch)
         dispatch({
             type: 'connection/save',
@@ -36,7 +51,7 @@ const ConnectionModal = ({ dispatch, mode, visible, connection, onClose }: Conne
             }
         })
         ConfigService.writeConfig(now);
-        onClose(e)
+        onClose()
         Toast.success(intl.get("common.success"))
     }
 
@@ -59,7 +74,7 @@ const ConnectionModal = ({ dispatch, mode, visible, connection, onClose }: Conne
                 <Button onClick={onHandleSubmit} type="primary" theme="solid">{intl.get("common.confirm")}</Button>
             </Space>}
             title={mode === 'create' ? intl.get("form.add_connection.title") : intl.get("form.add_connection.edit_title")} visible={visible}>
-            <Form getFormApi={getFormApi} labelPosition='left'
+            <Form getFormApi={getFormApi} labelPosition='left' initValues={currentConnection}
                 labelAlign='right' wrapperCol={{ span: 18 }} labelCol={{ span: 6 }}>
                 <Form.Input rules={[{ required: true, message: intl.get("form.add_connection.name.placeholder") }]}
                     placeholder={intl.get("form.add_connection.name.placeholder")}
@@ -67,7 +82,7 @@ const ConnectionModal = ({ dispatch, mode, visible, connection, onClose }: Conne
                 <Form.Input rules={[{ required: true, message: intl.get("form.add_connection.domain.placeholder") }]}
                     placeholder={intl.get("form.add_connection.domain.placeholder")}
                     field="host" label={intl.get("form.add_connection.domain")} />
-                <Form.InputNumber initValue={6379} style={{ width: '80%' }} rules={[{ required: true, message: intl.get("form.add_connection.port.placeholder") }]}
+                <Form.InputNumber style={{ width: '80%' }} rules={[{ required: true, message: intl.get("form.add_connection.port.placeholder") }]}
                     placeholder={intl.get("form.add_connection.port.placeholder")}
                     field="port" label={intl.get("form.add_connection.port")} />
                 <Form.Input mode="password"

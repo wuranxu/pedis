@@ -33,7 +33,6 @@ export default class ConfigService {
     }
 
     static async writeConfig(nodes: Array<any>) {
-        console.log(nodes)
         const filePath = await this.getConfigFile();
         try {
             fs.writeFileSync(filePath, JSON.stringify(nodes, null, 2), "utf-8");
