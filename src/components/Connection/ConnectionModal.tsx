@@ -2,25 +2,30 @@ import { IconSend } from '@douyinfe/semi-icons';
 import { Button, Form, Modal, Space, Toast } from '@douyinfe/semi-ui';
 import { connect } from 'dva';
 import uuid from "node-uuid";
-import React, { useEffect } from 'react';
+import React, { useRef } from 'react';
 import intl from 'react-intl-universal';
 import ConfigService from '../../service/config';
 import RedisService from '../../service/redis';
 import tree from '../../utils/tree';
 
-declare type Mode = 'create' | 'update';
 
 interface ConnectionModalProps {
-    mode: Mode | string;
     dispatch?: any;
     connection?: any;
     lang: string
 }
 
-const ConnectionModal = ({ dispatch, mode, connection }: ConnectionModalProps) => {
-    let form: any = null;
+const ConnectionModal = ({ dispatch, connection }: ConnectionModalProps) => {
 
-    const { visible, currentConnection } = connection;
+    const { mode } = connection;
+    const formApiRef = useRef();
+
+    const saveFormApi = (formApi: any) => {
+        formApiRef.current = formApi;
+    }
+
+
+    const { visible, currentConnection, treeLoading } = connection;
 
     const onClose = () => {
         dispatch({
@@ -30,7 +35,7 @@ const ConnectionModal = ({ dispatch, mode, connection }: ConnectionModalProps) =
     }
 
     const onHandleSubmit = async (e: React.MouseEvent) => {
-        const values = await form.validate()
+        const values = await formApiRef.current.validate()
         const data = await ConfigService.readConfig();
         let now;
         if (currentConnection.uid) {
@@ -55,26 +60,30 @@ const ConnectionModal = ({ dispatch, mode, connection }: ConnectionModalProps) =
         Toast.success(intl.get("common.success"))
     }
 
-    const onTestConnection = async () => {
-        const values = await form.validate()
-        await RedisService.connect(values)
-    }
-
-    const getFormApi = (formApi: any) => {
-        form = formApi;
+    const onTestConnection = () => {
+        const state = formApiRef.current.getFormState()
+        console.log(state.values, state.error)
+        if (state.error) {
+            return;
+        }
+        dispatch({
+            type: 'connection/save',
+            payload: { treeLoading: true }
+        })
+        RedisService.connect({ ...state.values, dispatch })
     }
 
     return (
         <Modal onCancel={onClose} footer={
             <Space>
-                <Button onClick={onTestConnection} type="danger" theme="borderless" icon={<IconSend />}>
+                <Button onClick={onTestConnection} loading={treeLoading} type="danger" theme="borderless" icon={<IconSend />}>
                     {intl.get("modal.connection.footer.test")}
                 </Button>
                 <Button onClick={onClose} >{intl.get("common.cancel")}</Button>
                 <Button onClick={onHandleSubmit} type="primary" theme="solid">{intl.get("common.confirm")}</Button>
             </Space>}
             title={mode === 'create' ? intl.get("form.add_connection.title") : intl.get("form.add_connection.edit_title")} visible={visible}>
-            <Form getFormApi={getFormApi} labelPosition='left' initValues={currentConnection}
+            <Form getFormApi={formApi => saveFormApi(formApi)} labelPosition='left' initValues={currentConnection}
                 labelAlign='right' wrapperCol={{ span: 18 }} labelCol={{ span: 6 }}>
                 <Form.Input rules={[{ required: true, message: intl.get("form.add_connection.name.placeholder") }]}
                     placeholder={intl.get("form.add_connection.name.placeholder")}

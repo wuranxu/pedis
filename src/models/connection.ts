@@ -21,7 +21,10 @@ export default {
 
         // visible
         visible: false,
-    
+
+        treeLoading: false,
+
+        mode: "create",
     },
 
     reducers: {
@@ -51,6 +54,10 @@ export default {
 
         // @ts-ignore
         * testConnection({ payload }, { call, put }) {
+            yield put({
+                type: 'save',
+                payload: { treeLoading: true }
+            })
             yield call(RedisService.connect, payload);
         }
     }

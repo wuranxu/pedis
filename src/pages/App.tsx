@@ -1,6 +1,6 @@
-import { IconHelpCircle, IconPlus } from '@douyinfe/semi-icons';
+import { IconHelpCircle, IconLoading, IconPlus } from '@douyinfe/semi-icons';
 import { IllustrationIdle, IllustrationIdleDark, IllustrationNoResult, IllustrationNoResultDark } from '@douyinfe/semi-illustrations';
-import { Button, Empty, Row } from '@douyinfe/semi-ui';
+import { Button, Empty, Row, Spin } from '@douyinfe/semi-ui';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import intl from "react-intl-universal";
@@ -19,10 +19,9 @@ import "./App.css";
 function App({ lang, setLang, dispatch, connection }: Lang) {
 
   const [currentTab, setCurrentTab] = useState<string | null>(null);
-  const [mode, setMode] = useState<string>('create');
-  const [record, setRecord] = useState<Map<string, any>>(new Map<string, any>());
-  const [visible, setVisible] = useState<boolean>(false);
-  const { treeData } = connection;
+  // const [record, setRecord] = useState<Map<string, any>>(new Map<string, any>());
+  // const [visible, setVisible] = useState<boolean>(false);
+  const { treeData, treeLoading } = connection;
 
 
   const onLoadConfig = async () => {
@@ -41,30 +40,32 @@ function App({ lang, setLang, dispatch, connection }: Lang) {
   // @ts-ignore
   return (
     <Row>
-      <ConnectionModal mode={mode} lang={lang} />
+      <ConnectionModal lang={lang} />
       <PedisHeader lang={lang} setLang={setLang} />
       {/*
         // @ts-ignore */}
       <SplitPane className="pedis-split" split="vertical" minSize={200} defaultSize={300} maxSize={600}>
         <div className="leftTree">
-          {treeData.length > 0 ? <LeftTree treeData={treeData} /> : <div className="emptyTree">
-            <Empty
-              style={{ marginTop: '-24%' }}
-              image={<IllustrationNoResult style={{ width: 120, height: 120 }} />}
-              darkModeImage={<IllustrationNoResultDark style={{ width: 120, height: 120 }} />}
-              title={intl.get("empty.no_connection_config")} description={intl.get("empty.no_connection_config.desc")}>
-              <div style={{ textAlign: 'center' }}>
-                <Button onClick={() => {
-                  setMode("create")
-                  dispatch({
-                    type: 'connection/save',
-                    payload: {visible: true, currentConnection: {port: 6379}}
-                  })
-                }} type="secondary" icon={<IconPlus />} theme='light'>{intl.get("menu.create_conn")}</Button>
-              </div>
-            </Empty>
-          </div>
-          }
+          <Spin size="small" tip={intl.get("common.loading")} spinning={treeLoading} indicator={<IconLoading />}>
+            {treeData.length > 0 ? <LeftTree treeData={treeData} /> : <div className="emptyTree">
+              <Empty
+                style={{ marginTop: '-24%' }}
+                image={<IllustrationNoResult style={{ width: 120, height: 120 }} />}
+                darkModeImage={<IllustrationNoResultDark style={{ width: 120, height: 120 }} />}
+                title={intl.get("empty.no_connection_config")} description={intl.get("empty.no_connection_config.desc")}>
+                <div style={{ textAlign: 'center' }}>
+                  <Button onClick={() => {
+                    setMode("create")
+                    dispatch({
+                      type: 'connection/save',
+                      payload: { visible: true, currentConnection: { port: 6379 } }
+                    })
+                  }} type="secondary" icon={<IconPlus />} theme='light'>{intl.get("menu.create_conn")}</Button>
+                </div>
+              </Empty>
+            </div>
+            }
+          </Spin>
         </div>
         {
           currentTab === null ? <div className='emptyTree'>
@@ -80,10 +81,9 @@ function App({ lang, setLang, dispatch, connection }: Lang) {
                   {intl.get("empty.see_document")}
                 </Button>
                 <Button style={{ padding: '0 24px' }} theme="solid" type="primary" icon={<IconPlus />} onClick={() => {
-                  setMode("create")
                   dispatch({
                     type: 'connection/save',
-                    payload: {visible: true, currentConnection: {port: 6379}}
+                    payload: { visible: true, currentConnection: { port: 6379 }, mode: "create" }
                   })
                 }}>
                   {intl.get("empty.new_connection")}

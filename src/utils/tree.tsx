@@ -54,6 +54,7 @@ const TreeLabel = (props: TreeNode) => {
                     name: props.name, port: props.port, host: props.host
                 },
                 visible: true,
+                mode: "edit"
             }
         })
     }
