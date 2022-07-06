@@ -25,7 +25,7 @@
     "form.add_connection.password": "Password",
     "form.add_connection.password.placeholder": "Please input password",
     "modal.connection.footer.test": "Connect",
-    "modal.connection.footer.test.success": "Connect Success.",
+    "modal.connection.footer.test.success": "Connect Success",
     "modal.connection.footer.test.failed": "Connect Failed, Please check your connection information!",
     "file.read_config.error": "Parse redis config error",
     "file.save_config.error": "Save redis config error",
