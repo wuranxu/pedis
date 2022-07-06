@@ -1,5 +1,6 @@
 .pedis-split {
     height: calc(100vh - 60px) !important;
+    width: 100vw;
 }
 
 .Resizer {
@@ -65,10 +66,18 @@ body[theme-mode=dark] .Resizer.vertical:hover {
 
 .leftTree {
     height: 100%;
+    padding: 8px;
+}
+
+.rightContent {
+    height: 100%;
+    padding: 8px;
+    width: calc(100vw - 327px);
 }
 
 .emptyTree {
     height: 100%;
+    width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;

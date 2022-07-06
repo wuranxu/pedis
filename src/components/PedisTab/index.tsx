@@ -1,4 +1,4 @@
-import { TabPane, Tabs } from "@douyinfe/semi-ui";
+import {TabPane, Tabs} from "@douyinfe/semi-ui";
 
 interface RedisTabProps {
     activeKey: string | undefined;
@@ -12,20 +12,26 @@ export declare interface TabItemProps {
 }
 
 
-const RedisTab = ({ activeKey, dispatch, tabList }: RedisTabProps) => {
+const RedisTab = ({activeKey, dispatch, tabList}: RedisTabProps) => {
+
+
     return (
         <Tabs
+            style={{width: '90%'}}
+            type="card"
+            collapsible={true}
             activeKey={activeKey}
+            tabPaneMotion={false}
             onChange={key => {
                 dispatch({
                     type: 'connection/save',
-                    payload: { activeKey: key }
+                    payload: {activeKey: key}
                 })
             }}
         >
             {tabList.map(tab => (
-                <TabPane tab={tab.title} itemKey={tab.key} key={tab.key}>
-                    nini
+                <TabPane closable tab={tab.title} itemKey={tab.key} key={tab.key}>
+                    这里是redis的数据了哦
                 </TabPane>
             ))}
         </Tabs>

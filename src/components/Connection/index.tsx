@@ -1,5 +1,7 @@
 import {Tree} from "@douyinfe/semi-ui";
+import { Value } from "@douyinfe/semi-ui/lib/es/tree";
 import {connect} from "dva";
+import { useState } from "react";
 import {ConnectState} from "../../models/connect";
 import {StateProps} from "../../models/connection";
 import "./index.css";
@@ -18,20 +20,21 @@ interface LeftTreeProps extends TreeProps {
 const LeftTree = ({treeData, dispatch, connection}: LeftTreeProps) => {
 
     // @ts-ignore
-    const {selectedKeys, tabList} = connection;
+    const {tabList, selectedKeys} = connection;
+
+    // const [selectedKeys, setSelectedKeys] = useState<Value>();
 
     return (
         <Tree className="left-body"
               directory
               onChangeWithObject
               onChange={node => {
-                  console.log(node)
                   dispatch({
                       type: 'connection/save',
                       payload: {
-                          selectedKeys: node.key,
                           tabList: [...tabList, {title: node.search, key: node.key}],
-                          activeKey: node.key
+                          activeKey: node.key,
+                          selectedKeys: {value: node.value}
                       }
                   })
               }}

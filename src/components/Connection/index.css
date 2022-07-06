@@ -1,3 +1,4 @@
 .left-body {
     height: calc(100vh - 60px);
+    padding-right: 2px;
 }
