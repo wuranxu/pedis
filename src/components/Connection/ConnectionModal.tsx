@@ -44,6 +44,15 @@ const ConnectionModal = ({ dispatch, connection }: ConnectionModalProps) => {
             const dest = data.findIndex((v: any) => v.key === currentConnection.uid);
             data[dest] = { key: data[dest].key, ...values }
             now = [...data]
+            dispatch({
+                type: 'connection/save',
+                payload: {
+                    currentConnection: {
+                        ...data[dest],
+                        uid: data[dest].key
+                    }
+                }
+            })
         } else {
             // insert
             const key = uuid.v4();

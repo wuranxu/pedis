@@ -14,6 +14,10 @@
     "empty.new_connection": "New Connection",
     "empty.no_connection_config": "No Connection Data",
     "empty.no_connection_config.desc": "Click button bellow to add a connection!",
+    "empty.no_available_redis": "No Available Redis Connection",
+    "empty.no_available_redis.desc": "You can modify the connection config and then reconnect.",
+    "empty.reconnect_redis": "Reconnect",
+    "empty.edit_redis": "Modify Connection",
     "form.add_connection.title": "New Connection",
     "form.add_connection.edit_title": "Edit Connection",
     "form.add_connection.name": "Name",
@@ -34,5 +38,6 @@
     "tree.operation.delete": "Delete Connection",
     "tree.operation.open": "Open Connection",
     "connection.delete.title": "Are you sure to delete this connection?",
-    "connection.delete.content": "It's unable to resume, Please be serious!"
+    "connection.delete.content": "It's unable to resume, Please be serious!",
+    "database.tip": "select db plz"
 }

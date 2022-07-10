@@ -71,17 +71,26 @@ body[theme-mode=dark] .Resizer.vertical:hover {
 
 .rightContent {
     height: 100%;
-    padding: 8px;
+    padding: 8px 8px 0 8px;
     width: calc(100vw - 327px);
 }
 
 .emptyTree {
-    height: 100%;
+    height: calc(100vh - 104px) !important;
     width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
+}
+
+.bottom {
+    height: 32px;
+}
+
+
+.rightConnection {
+    height: calc(100vh - 104px) !important;
 }
 
 .semi-spin {

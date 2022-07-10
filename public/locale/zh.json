@@ -14,6 +14,10 @@
     "empty.no_connection_config": "无连接数据",
     "empty.no_connection_config.desc": "点击下方＋按钮可以配置连接哦!",
     "empty.new_connection": "创建连接",
+    "empty.no_available_redis": "没有可用的Redis连接",
+    "empty.no_available_redis.desc": "你可以调整redis配置后尝试重新连接",
+    "empty.reconnect_redis": "重新连接",
+    "empty.edit_redis": "修改配置",
     "form.add_connection.title": "创建连接",
     "form.add_connection.edit_title": "编辑连接",
     "form.add_connection.name": "名称",
@@ -34,6 +38,7 @@
     "tree.operation.delete": "删除连接",
     "tree.operation.open": "打开连接",
     "connection.delete.title": "你确定要删除此连接吗?",
-    "connection.delete.content": "该操作不可逆，请谨慎处理。"
+    "connection.delete.content": "该操作不可逆，请谨慎处理。",
+    "database.tip": "请选择db"
 
 }

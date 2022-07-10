@@ -19,6 +19,9 @@ export interface StateProps {
     activeKey: string | null;
     selectedKeys: Value | null;
     tabList: any[];
+    dbNum: number;
+    currentDb: number | null | any;
+    redisConn?: any;
 }
 
 export type ConnectionModelType = {
@@ -30,6 +33,7 @@ export type ConnectionModelType = {
     };
     reducers: {
         save: any;
+        updateConnectionStatus: any;
     };
 };
 
@@ -54,15 +58,27 @@ const Model: ConnectionModelType = {
         activeKey: '',
         tabList: [],
         selectedKeys: null,
+
+        // database number
+        dbNum: 0,
+        currentDb: null,
+        redisConn: null,
     },
 
     reducers: {
-        save(state: ConnectionState, action: { payload: any }) {
+        save(state: StateProps, action: { payload: any }) {
             return {
                 ...state,
                 ...action.payload,
             }
         },
+
+        updateConnectionStatus(state: StateProps, action: { payload: any }) {
+            return {
+                ...state,
+                redisConn: action.payload
+            }
+        }
     },
 
     effects: {
