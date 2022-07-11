@@ -32,7 +32,6 @@ const RedisTab = ({ activeKey, dispatch, tabList, selectedKeys, redisConn, curre
             <div>
                 <Button
                     onClick={async () => {
-                        console.log(currentConnection)
                         await RedisService.open({
                             name: currentConnection.name,
                             host: currentConnection.host,

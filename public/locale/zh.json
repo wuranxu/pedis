@@ -39,6 +39,7 @@
     "tree.operation.open": "打开连接",
     "connection.delete.title": "你确定要删除此连接吗?",
     "connection.delete.content": "该操作不可逆，请谨慎处理。",
-    "database.tip": "请选择db"
-
+    "database.tip": "请选择db",
+    "banner.keys.total": "当前数据库共有",
+    "banner.keys.per": "个"
 }

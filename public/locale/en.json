@@ -39,5 +39,7 @@
     "tree.operation.open": "Open Connection",
     "connection.delete.title": "Are you sure to delete this connection?",
     "connection.delete.content": "It's unable to resume, Please be serious!",
-    "database.tip": "select db plz"
+    "database.tip": "select db plz",
+    "banner.keys.total": "current database has",
+    "banner.keys.per": ""
 }

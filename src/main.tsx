@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import "./index.css";
 import App from './pages/App';
 
+import createLoading from 'dva-loading';
+
 import { LocaleProvider } from '@douyinfe/semi-ui';
 import dva from 'dva';
 import Locale from './components/Locale';
@@ -32,7 +34,7 @@ const LocaleApp = () => {
     );
 }
 
-const app = dva();
+const app = dva(createLoading());
 app.model(connection);
 app.router(() => <LocaleApp />);
 

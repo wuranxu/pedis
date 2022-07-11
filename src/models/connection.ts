@@ -22,6 +22,7 @@ export interface StateProps {
     dbNum: number;
     currentDb: number | null | any;
     redisConn?: any;
+    redisKeys:Map<number, number>;
 }
 
 export type ConnectionModelType = {
@@ -63,6 +64,7 @@ const Model: ConnectionModelType = {
         dbNum: 0,
         currentDb: null,
         redisConn: null,
+        redisKeys: new Map<number, number>()
     },
 
     reducers: {

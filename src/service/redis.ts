@@ -43,7 +43,11 @@ export default class RedisService {
         let dbMax = 16;
         const dbInfo = await redis.config("get", "databases");
         return dbInfo[1] || dbMax
+    }
 
+    static async loadKeyCount(redis: any): Promise<string[]> {
+        const data = await redis.info('Keyspace')
+        return data.split("\n")
     }
 
     static redisEvent(key: string, setRedis: boolean, redis: any, dispatch: any) {
