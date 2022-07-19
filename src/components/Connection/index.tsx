@@ -1,12 +1,11 @@
-import { Tree } from "@douyinfe/semi-ui";
-import { Value } from "@douyinfe/semi-ui/lib/es/tree";
+import { Empty, Tree } from "@douyinfe/semi-ui";
 import { connect } from "dva";
-import { useState } from "react";
+import intl from 'react-intl-universal';
+import empty from "../../../assets/image/empty.svg";
 import { ConnectState } from "../../models/connect";
 import { StateProps } from "../../models/connection";
 import RedisService from "../../service/redis";
 import "./index.css";
-
 
 interface TreeProps {
     treeData: Array<any>;
@@ -33,10 +32,24 @@ const LeftTree = ({ treeData, dispatch, connection }: LeftTreeProps) => {
         return tabList;
     }
 
+    const MyEmpty = () => {
+        return (
+            <Empty
+                image={<img src={empty} style={{ height: '200%', width: '100%' }} />}
+                darkModeImage={<img src={empty} style={{ height: '200%', width: '100%' }} />}
+                title={intl.get("empty.no_connection_data")}
+                description={intl.get("empty.no_connection_data.desc")}>
+            </Empty>
+        )
+    }
+
     return (
         <Tree className="left-body"
             directory
+            searchPlaceholder={intl.get("tree.search.placeholder")}
             onChangeWithObject
+            emptyContent={<MyEmpty/>}
+            showClear
             onChange={async node => {
                 dispatch({
                     type: 'connection/save',

@@ -101,7 +101,11 @@ body[theme-mode=dark] .keyBody .Resizer.vertical:hover {
 .semi-spin-children {
     height: calc(100vh - 232px) !important;
     overflow-y: auto;
+    /* overflow-x: hidden; */
+}
 
+.key-semi-list {
+    min-height: 500px;
 }
 
 .operations {

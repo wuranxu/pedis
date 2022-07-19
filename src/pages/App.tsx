@@ -179,7 +179,7 @@ const App = ({ language: { lang, setLang }, connection, dispatch, loading }: App
 
                         <div className='bottom'>
                             {
-                                tabList.length === 0 || !selectedKeys ? null : <Row gutter={12}>
+                                tabList.length === 0 || !selectedKeys ? null : <Row>
                                     <Col span={6}>
                                         <Select
                                             showArrow={false}
