@@ -121,6 +121,7 @@ export default {
             label: Label({ ...item, dispatch, uid: item.key }),
             search: `${item.name}(${item.host}:${item.port})`,
             children: [],
+            value: item.key,
             icon: <IconDesktop />,
             data: item,
             dispatch,

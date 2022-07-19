@@ -1,8 +1,21 @@
 .pedis-split {
     height: calc(100vh - 60px) !important;
+    width: 100vw;
 }
 
-.Resizer {
+body[theme-mode=dark] .pedis-split .Pane1 {
+    background: rgb(32 36 39);
+}
+
+/* .body[theme-mode=dark] .pedis-split .Pane2 {
+    background-color: #000;
+} */
+
+.pedis-split .Pane1 {
+    background: #F9F9F9;
+}
+
+/* .Resizer {
     background: #000;
     opacity: 0.2;
     z-index: 1;
@@ -61,18 +74,53 @@ body[theme-mode=dark] .Resizer.vertical:hover {
 
 .Resizer.disabled:hover {
     border-color: transparent;
-}
+} */
 
 .leftTree {
     height: 100%;
+    padding: 8px;
+}
+
+.rightContent {
+    height: 100%;
+    padding: 8px 8px 0 8px;
+    width: calc(100vw - 260px);
 }
 
 .emptyTree {
-    height: 100%;
+    height: calc(100vh - 110px) !important;
+    width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
+}
+
+.bottom {
+    height: 38px;
+}
+
+.bottomBanner {
+    padding: 0px;
+    border-radius: 4px;
+}
+
+.banner {
+    line-height: 32px;
+    font-weight: 600;
+    height: 32px;
+    font-size: 12px;
+}
+
+.bannerIcon {
+    padding-left: 12px;
+    font-size: 13px;
+    line-height: 32px;
+}
+
+
+.rightConnection {
+    height: calc(100vh - 110px) !important;
 }
 
 .semi-spin {
@@ -81,4 +129,10 @@ body[theme-mode=dark] .Resizer.vertical:hover {
 
 .semi-spin-children {
     height: 100% !important;
+}
+
+
+/* global css */
+.i-icon {
+    cursor: pointer;
 }

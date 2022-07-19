@@ -48,7 +48,7 @@ export default (lang: Lang) => {
             footer={
                 <Space spacing={[24, 16]}>
                     <Button type="tertiary" theme='borderless' icon={<IconGithubLogo />} onClick={() => {
-                        window.shell.openExternal('https://github.com')
+                        window.shell.openExternal('https://github.com/wuranxu/pedis')
                     }}>
                         Github
                     </Button>

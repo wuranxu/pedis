@@ -1,16 +1,62 @@
-import { Toast } from "@douyinfe/semi-ui";
-import intl from 'react-intl-universal';
+import { Value } from "@douyinfe/semi-ui/lib/es/tree";
+import { Effect } from "dva";
 import { removeConfig } from "../service/config";
 import RedisService from "../service/redis";
 import tree from "../utils/tree";
-const Redis = window.require("ioredis");
 
 export interface ConnectionState {
     data?: string;
 }
 
+export enum RedisKeyType {
+    LIST = "teal",
+    SET = "orange",
+    STRING = "blue",
+    HASH = "green",
+    ZSET = "violet",
+    STREAM = "red"
+}
 
-export default {
+export interface RedisKeyProps {
+    name: string;
+    type: RedisKeyType;
+}
+
+export interface StateProps {
+    treeData: any[];
+    originData: any[];
+
+    currentConnection: any;
+    visible: boolean;
+    treeLoading: boolean;
+    mode: string | 'create';
+    activeKey: string | null;
+    selectedKeys: Value | null;
+    tabList: any[];
+    dbNum: number;
+    currentDb: number | null | any;
+    redisConn?: any;
+    redisKeys: Map<number, number>;
+    keyData: RedisKeyProps[],
+    keyType: RedisKeyProps[],
+}
+
+export type ConnectionModelType = {
+    namespace: string;
+    state: StateProps;
+    effects: {
+        removeConnections: Effect;
+        testConnection: Effect;
+        loadKeys: Effect;
+    };
+    reducers: {
+        save: any;
+        updateConnectionStatus: any;
+    };
+};
+
+
+const Model: ConnectionModelType = {
     namespace: 'connection',
     state: {
         treeData: [],
@@ -25,21 +71,39 @@ export default {
         treeLoading: false,
 
         mode: "create",
+
+        // tab and currentKey
+        activeKey: '',
+        tabList: [],
+        selectedKeys: null,
+
+        // database number
+        dbNum: 0,
+        currentDb: null,
+        redisConn: null,
+        redisKeys: new Map<number, number>(),
+        keyData: [],
+        keyType: []
     },
 
     reducers: {
-        save(state: ConnectionState, action: { payload: any }) {
+        save(state: StateProps, action: { payload: any }) {
             return {
                 ...state,
                 ...action.payload,
             }
         },
+
+        updateConnectionStatus(state: StateProps, action: { payload: any }) {
+            return {
+                ...state,
+                redisConn: action.payload
+            }
+        }
     },
 
     effects: {
-        // @ts-ignore
         * removeConnections({ payload }, { put, call }) {
-            // @ts-ignore
             const res = yield call(removeConfig, payload.uid);
             const treeData = tree.render(res, payload.dispatch)
             if (res) {
@@ -52,13 +116,22 @@ export default {
             return false;
         },
 
-        // @ts-ignore
         * testConnection({ payload }, { call, put }) {
             yield put({
                 type: 'save',
                 payload: { treeLoading: true }
             })
             yield call(RedisService.connect, payload);
+        },
+
+        * loadKeys({ payload }, { call, put }) {
+            const res = yield call(RedisService.fetchKeys, payload)
+            yield put({
+                type: 'save',
+                payload: { keyData: res }
+            })
         }
     }
 }
+
+export default Model;

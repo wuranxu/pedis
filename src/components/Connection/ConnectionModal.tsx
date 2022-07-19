@@ -1,8 +1,9 @@
 import { IconSend } from '@douyinfe/semi-icons';
 import { Button, Form, Modal, Space, Toast } from '@douyinfe/semi-ui';
+import { FormApi } from '@douyinfe/semi-ui/lib/es/form/interface';
 import { connect } from 'dva';
 import uuid from "node-uuid";
-import React, { useRef } from 'react';
+import React, { MutableRefObject, useRef } from 'react';
 import intl from 'react-intl-universal';
 import ConfigService from '../../service/config';
 import RedisService from '../../service/redis';
@@ -18,9 +19,9 @@ interface ConnectionModalProps {
 const ConnectionModal = ({ dispatch, connection }: ConnectionModalProps) => {
 
     const { mode } = connection;
-    const formApiRef = useRef();
+    const formApiRef = useRef<MutableRefObject<FormApi>>();
 
-    const saveFormApi = (formApi: any) => {
+    const saveFormApi = (formApi: FormApi) => {
         formApiRef.current = formApi;
     }
 
@@ -43,6 +44,15 @@ const ConnectionModal = ({ dispatch, connection }: ConnectionModalProps) => {
             const dest = data.findIndex((v: any) => v.key === currentConnection.uid);
             data[dest] = { key: data[dest].key, ...values }
             now = [...data]
+            dispatch({
+                type: 'connection/save',
+                payload: {
+                    currentConnection: {
+                        ...data[dest],
+                        uid: data[dest].key
+                    }
+                }
+            })
         } else {
             // insert
             const key = uuid.v4();
@@ -60,17 +70,13 @@ const ConnectionModal = ({ dispatch, connection }: ConnectionModalProps) => {
         Toast.success(intl.get("common.success"))
     }
 
-    const onTestConnection = () => {
-        const state = formApiRef.current.getFormState()
-        console.log(state.values, state.error)
-        if (state.error) {
-            return;
-        }
+    const onTestConnection = async () => {
+        const values = await formApiRef.current.validate()
         dispatch({
             type: 'connection/save',
             payload: { treeLoading: true }
         })
-        RedisService.connect({ ...state.values, dispatch })
+        RedisService.connect({ ...values, dispatch })
     }
 
     return (

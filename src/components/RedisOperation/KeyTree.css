@@ -1,0 +1,118 @@
+.keyBody {
+    height: calc(100vh - 148px) !important;
+}
+
+.rightConnection .semi-tabs-content {
+    padding: 0 !important;
+}
+
+.keyBody .Resizer {
+    background: #000;
+    opacity: 0.2;
+    z-index: 1;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+}
+
+
+.keyBody .Resizer:hover {
+    -webkit-transition: all 2s ease;
+    transition: all 2s ease;
+}
+
+.keyBody .Resizer.horizontal {
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
+}
+
+.keyBody .Resizer.horizontal:hover {
+    border-top: 5px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+}
+
+.keyBody .Resizer.vertical {
+    height: calc(100vh - 148px) !important;
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+}
+
+body[theme-mode=dark] .keyBody .Pane1,
+body[theme-mode=dark] .keyBody .Pane2 {
+    background-color: var(--semi-color-bg-0) !important;
+}
+
+.keyBody .Pane1 {
+    background: #fff !important;
+}
+
+.keyBody .Pane1,
+.keyBody .Pane2 {
+    height: calc(100vh - 148px);
+    /* border-bottom: 1px solid var(--semi-color-border) */
+}
+
+body[theme-mode=dark] .keyBody .Resizer {
+    background-color: #ececec !important;
+}
+
+body[theme-mode=dark] .keyBody .Resizer.vertical:hover {
+    border-left: 5px solid rgba(101, 57, 148, 0.5) !important;
+    border-right: 5px solid rgba(101, 57, 148, 0.5) !important;
+}
+
+.keyBody .Resizer.vertical:hover {
+    border-left: 5px solid rgba(0, 0, 0, 0.5);
+    border-right: 5px solid rgba(0, 0, 0, 0.5);
+}
+
+.key-list-item {
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-wrap: nowrap;
+    display: block;
+}
+
+.key-list-item:active {
+    background-color: var(--semi-color-fill-1);
+}
+
+.key-list-item:hover {
+    background-color: var(--semi-color-fill-0);
+}
+
+.semi-list-small .semi-list-item {
+    padding: 8px;
+}
+
+
+.semi-spin-children {
+    height: calc(100vh - 232px) !important;
+    overflow-y: auto;
+
+}
+
+.operations {
+    height: 24px;
+    line-height: 28px;
+    float: right;
+}
+
+/* tag css */
+.tag-semi-tag {
+    width: 70px;
+    text-align: center;
+    border-radius: 4px;
+}
