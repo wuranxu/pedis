@@ -3,7 +3,19 @@
     width: 100vw;
 }
 
-.Resizer {
+body[theme-mode=dark] .pedis-split .Pane1 {
+    background: rgb(32 36 39);
+}
+
+/* .body[theme-mode=dark] .pedis-split .Pane2 {
+    background-color: #000;
+} */
+
+.pedis-split .Pane1 {
+    background: #F9F9F9;
+}
+
+/* .Resizer {
     background: #000;
     opacity: 0.2;
     z-index: 1;
@@ -62,7 +74,7 @@ body[theme-mode=dark] .Resizer.vertical:hover {
 
 .Resizer.disabled:hover {
     border-color: transparent;
-}
+} */
 
 .leftTree {
     height: 100%;
@@ -72,7 +84,7 @@ body[theme-mode=dark] .Resizer.vertical:hover {
 .rightContent {
     height: 100%;
     padding: 8px 8px 0 8px;
-    width: calc(100vw - 327px);
+    width: calc(100vw - 260px);
 }
 
 .emptyTree {
@@ -117,4 +129,10 @@ body[theme-mode=dark] .Resizer.vertical:hover {
 
 .semi-spin-children {
     height: 100% !important;
+}
+
+
+/* global css */
+.i-icon {
+    cursor: pointer;
 }

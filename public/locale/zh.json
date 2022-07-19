@@ -18,6 +18,8 @@
     "empty.no_available_redis.desc": "你可以调整redis配置后尝试重新连接",
     "empty.reconnect_redis": "重新连接",
     "empty.edit_redis": "修改配置",
+    "empty.no_keys": "没有数据",
+    "empty.no_keys.desc": "请重新查询或者添加key",
     "form.add_connection.title": "创建连接",
     "form.add_connection.edit_title": "编辑连接",
     "form.add_connection.name": "名称",
@@ -41,5 +43,7 @@
     "connection.delete.content": "该操作不可逆，请谨慎处理。",
     "database.tip": "请选择db",
     "banner.keys.total": "当前数据库共有",
-    "banner.keys.per": "个"
+    "banner.keys.per": "个",
+    "search.key": "输入需要搜索的key",
+    "key.list.loadMore": "加载更多"
 }

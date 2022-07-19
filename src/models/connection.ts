@@ -8,6 +8,20 @@ export interface ConnectionState {
     data?: string;
 }
 
+export enum RedisKeyType {
+    LIST = "teal",
+    SET = "orange",
+    STRING = "blue",
+    HASH = "green",
+    ZSET = "violet",
+    STREAM = "red"
+}
+
+export interface RedisKeyProps {
+    name: string;
+    type: RedisKeyType;
+}
+
 export interface StateProps {
     treeData: any[];
     originData: any[];
@@ -22,7 +36,9 @@ export interface StateProps {
     dbNum: number;
     currentDb: number | null | any;
     redisConn?: any;
-    redisKeys:Map<number, number>;
+    redisKeys: Map<number, number>;
+    keyData: RedisKeyProps[],
+    keyType: RedisKeyProps[],
 }
 
 export type ConnectionModelType = {
@@ -31,6 +47,7 @@ export type ConnectionModelType = {
     effects: {
         removeConnections: Effect;
         testConnection: Effect;
+        loadKeys: Effect;
     };
     reducers: {
         save: any;
@@ -64,7 +81,9 @@ const Model: ConnectionModelType = {
         dbNum: 0,
         currentDb: null,
         redisConn: null,
-        redisKeys: new Map<number, number>()
+        redisKeys: new Map<number, number>(),
+        keyData: [],
+        keyType: []
     },
 
     reducers: {
@@ -103,6 +122,14 @@ const Model: ConnectionModelType = {
                 payload: { treeLoading: true }
             })
             yield call(RedisService.connect, payload);
+        },
+
+        * loadKeys({ payload }, { call, put }) {
+            const res = yield call(RedisService.fetchKeys, payload)
+            yield put({
+                type: 'save',
+                payload: { keyData: res }
+            })
         }
     }
 }

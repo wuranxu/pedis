@@ -16,6 +16,7 @@
   "dependencies": {
     "@douyinfe/semi-icons": "^2.13.0",
     "@douyinfe/semi-ui": "^2.13.0",
+    "@icon-park/react": "^1.4.2",
     "@semi-bot/semi-theme-doucreator": "^1.0.18",
     "@semi-bot/semi-theme-pedis": "^0.0.0",
     "dva": "^2.4.1",

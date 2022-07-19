@@ -113,11 +113,7 @@ const App = ({ language: { lang, setLang }, connection, dispatch, loading }: App
             <PedisHeader lang={lang} setLang={setLang} />
             {/*
         // @ts-ignore */}
-            <SplitPane className="pedis-split" split="vertical" minSize={200} defaultSize={300} maxSize={600}
-                onDragFinished={size => {
-                    document.getElementsByClassName("rightContent")[0].style.width = `calc(100vw - ${size + 27}px)`;
-                    setLeftSize(size)
-                }}>
+            <SplitPane className="pedis-split" split="vertical" minSize={260} defaultSize={260} maxSize={260}>
                 <Row className="leftTree">
                     <Spin size="small" tip={intl.get("common.loading")} spinning={treeLoading}
                         indicator={<IconLoading />}>

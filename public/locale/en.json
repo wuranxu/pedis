@@ -18,6 +18,8 @@
     "empty.no_available_redis.desc": "You can modify the connection config and then reconnect.",
     "empty.reconnect_redis": "Reconnect",
     "empty.edit_redis": "Modify Connection",
+    "empty.no_keys": "No Key",
+    "empty.no_keys.desc": "Search again or add one",
     "form.add_connection.title": "New Connection",
     "form.add_connection.edit_title": "Edit Connection",
     "form.add_connection.name": "Name",
@@ -41,5 +43,7 @@
     "connection.delete.content": "It's unable to resume, Please be serious!",
     "database.tip": "select db plz",
     "banner.keys.total": "current database has",
-    "banner.keys.per": ""
+    "banner.keys.per": "",
+    "search.key": "Please input redis key",
+    "key.list.loadMore": "Load More"
 }

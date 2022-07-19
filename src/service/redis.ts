@@ -50,6 +50,25 @@ export default class RedisService {
         return data.split("\n")
     }
 
+    static async fetchKeys({ redis, key }) {
+        let searchKey = key;
+        if (key === undefined || key === '') {
+            searchKey = `*`
+        }
+        const keys = await redis.keys(searchKey)
+        const items = []
+        for await (const key of keys) {
+            const tp = await RedisService.getType(redis, key)
+            items.push({ name: key, type: tp.toUpperCase() })
+        }
+        console.log(items)
+        return items;
+    }
+
+    static async getType(redis, key: string) {
+        return await redis.type(key);
+    }
+
     static redisEvent(key: string, setRedis: boolean, redis: any, dispatch: any) {
         redis.once("error", () => {
             Toast.error(intl.get("modal.connection.footer.test.failed"))
