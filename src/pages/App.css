@@ -17,6 +17,7 @@ body[theme-mode=dark] .pedis-split .Pane1 {
 
 .pedis-split .Pane2 {
     width: calc(100vw - 276px);
+    min-width: 0;
 }
 
 /* .Resizer {

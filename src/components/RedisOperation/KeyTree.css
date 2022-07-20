@@ -59,6 +59,7 @@ body[theme-mode=dark] .keyBody .Pane2 {
 .keyBody .Pane1,
 .keyBody .Pane2 {
     height: calc(100vh - 148px);
+    min-width: 0;
     /* border-bottom: 1px solid var(--semi-color-border) */
 }
 

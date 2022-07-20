@@ -50,5 +50,8 @@
     "banner.keys.total": "当前数据库共有",
     "banner.keys.per": "个",
     "search.key": "输入需要搜索的key",
-    "key.list.loadMore": "加载更多"
+    "key.list.loadMore": "加载更多",
+    "key.save": "点击保存key",
+    "key.copy": "点击复制key名称",
+    "key.hex_to_str": "将hex转换为string"
 }

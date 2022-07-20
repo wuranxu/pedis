@@ -65,10 +65,14 @@ export default class RedisService {
         return items;
     }
 
-    static async getString({ redis, key }): Promise<string> {
+    static async getString({ redis, key }) {
         const result = await redis.get(key)
-        console.log(result)
         return result;
+    }
+
+    static async setString({redis, key, value}: any) {
+        const result = await redis.set(key, value)
+        return result
     }
 
     static async getType(redis, key: string) {

@@ -1,16 +1,18 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 import semi from "vite-plugin-semi-theme";
+import monacoEditorPlugin from 'vite-plugin-monaco-editor';
+
 // @ts-ignore
 const path = require("path")
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), semi({
+  plugins: [monacoEditorPlugin({}), react(), semi({
     theme: "@semi-bot/semi-theme-pedis",
     // options: {
     // ... 👆
     //},
-  }),],
+  })],
   resolve: {
     alias: [
       {

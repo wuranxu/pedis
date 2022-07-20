@@ -50,5 +50,9 @@
     "banner.keys.total": "current database has",
     "banner.keys.per": "",
     "search.key": "Please input redis key",
-    "key.list.loadMore": "Load More"
+    "key.list.loadMore": "Load More",
+    "key.save": "Click to save",
+    "key.copy": "Click to copy key name",
+    "key.hex_to_str": "Convert hex to string"
+
 }

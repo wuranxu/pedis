@@ -52,6 +52,8 @@ export type ConnectionModelType = {
         removeConnections: Effect;
         testConnection: Effect;
         loadKeys: Effect;
+        getString: Effect;
+        setString: Effect;
     };
     reducers: {
         save: any;
@@ -148,6 +150,11 @@ const Model: ConnectionModelType = {
                 }
             })
         },
+
+        * setString({ payload }, { call, put }) {
+            const res = yield call(RedisService.setString, payload);
+            return res;
+        }
     }
 }
 
