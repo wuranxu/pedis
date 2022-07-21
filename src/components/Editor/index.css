@@ -7,6 +7,10 @@
     padding: 12px 20px;
 }
 
+.semi-card {
+    border-radius: 0;
+}
+
 h6.semi-typography, .semi-typography-h6.semi-typography {
     font-size: 14px;
     line-height: 14px;
