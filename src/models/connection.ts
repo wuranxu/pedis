@@ -39,6 +39,10 @@ export interface StateProps {
     redisKeys: Map<number, number>;
     keyData: RedisKeyProps[],
     keyType: RedisKeyProps[],
+    activeRedisKey: string;
+
+    currentSelectedKey: {},
+    currentStringValue: string;
 }
 
 export type ConnectionModelType = {
@@ -48,6 +52,8 @@ export type ConnectionModelType = {
         removeConnections: Effect;
         testConnection: Effect;
         loadKeys: Effect;
+        getString: Effect;
+        setString: Effect;
     };
     reducers: {
         save: any;
@@ -83,7 +89,10 @@ const Model: ConnectionModelType = {
         redisConn: null,
         redisKeys: new Map<number, number>(),
         keyData: [],
-        keyType: []
+        keyType: [],
+        activeRedisKey: '',
+        currentStringValue: '',
+        currentSelectedKey: {},
     },
 
     reducers: {
@@ -130,6 +139,21 @@ const Model: ConnectionModelType = {
                 type: 'save',
                 payload: { keyData: res }
             })
+        },
+
+        * getString({ payload }, { call, put }) {
+            const res = yield call(RedisService.getString, payload);
+            yield put({
+                type: 'save',
+                payload: {
+                    currentStringValue: res
+                }
+            })
+        },
+
+        * setString({ payload }, { call, put }) {
+            const res = yield call(RedisService.setString, payload);
+            return res;
         }
     }
 }

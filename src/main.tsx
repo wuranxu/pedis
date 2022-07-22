@@ -10,6 +10,7 @@ import { LocaleProvider } from '@douyinfe/semi-ui';
 import dva from 'dva';
 import Locale from './components/Locale';
 import connection from './models/connection';
+import './userWorker';
 
 const LocaleApp = () => {
 

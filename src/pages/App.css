@@ -8,11 +8,16 @@ body[theme-mode=dark] .pedis-split .Pane1 {
 }
 
 /* .body[theme-mode=dark] .pedis-split .Pane2 {
-    background-color: #000;
+    width: calc(100vw - 260px)
 } */
 
 .pedis-split .Pane1 {
     background: #F9F9F9;
+}
+
+.pedis-split .Pane2 {
+    width: calc(100vw - 276px);
+    min-width: 0;
 }
 
 /* .Resizer {
@@ -77,14 +82,14 @@ body[theme-mode=dark] .Resizer.vertical:hover {
 } */
 
 .leftTree {
-    height: 100%;
+    height: inherit;
     padding: 8px;
 }
 
 .rightContent {
     height: 100%;
     padding: 8px 8px 0 8px;
-    width: calc(100vw - 260px);
+    /* width: calc(100vw - 276px); */
 }
 
 .emptyTree {
@@ -102,6 +107,7 @@ body[theme-mode=dark] .Resizer.vertical:hover {
 
 .bottomBanner {
     padding: 0px;
+    margin-left: 8px;
     border-radius: 4px;
 }
 

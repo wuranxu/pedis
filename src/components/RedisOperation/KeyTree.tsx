@@ -20,6 +20,7 @@ interface KeyTreeProps {
     loading: any;
 }
 
+const limit: number = 10;
 
 const KeyTree = ({ connection, dispatch, loading }: KeyTreeProps) => {
     const { keyData, redisConn } = connection;
@@ -34,8 +35,7 @@ const KeyTree = ({ connection, dispatch, loading }: KeyTreeProps) => {
     }, [key])
 
     useEffect(() => {
-        console.log(keyData)
-        setList(keyData.slice(0, count * 8))
+        setList(keyData.slice(0, count * limit))
     }, [count])
 
     const loadKeys = async (redisKey: string = key) => {
@@ -49,11 +49,11 @@ const KeyTree = ({ connection, dispatch, loading }: KeyTreeProps) => {
     }
 
     const MyInput = () => {
-        return <Input size="small" style={{ width: '95%' }} onCompositionEnd={(v) => onSearch(v.target.value)} onChange={(v) => !v ? onSearch() : null} placeholder={intl.get("search.key")} prefix={<IconSearch />} />
+        return <Input size="small" style={{ width: '92%' }} onCompositionEnd={(v) => onSearch(v.target.value)} onChange={(v) => !v ? onSearch() : null} placeholder={intl.get("search.key")} prefix={<IconSearch />} />
     }
 
     const onLoadMore = () => {
-        setList(keyData.slice(0, 8 * count + 1))
+        setList(keyData.slice(0, limit * count + 1))
         setCount(count + 1)
     }
 
@@ -136,32 +136,29 @@ const KeyTree = ({ connection, dispatch, loading }: KeyTreeProps) => {
                 header={<ListHeader />}
                 loadMore={loadMore}
                 renderItem={item =>
-                    <Tooltip content={item.name} position="topLeft" style={{width: 200, wordBreak: 'break-all'}}>
-                        <List.Item className='key-list-item'>
-                            <Tag className='tag-semi-tag' color={RedisKeyType[item.type]}>
-                                {item.type}</Tag>
-                            <span style={{
-                                marginLeft: 8, whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                            }}>{item.name}</span>
-                        </List.Item>
-                    </Tooltip>
+                    <Skeleton placeholder={placeholder} loading={loading.effects['connection/loadKeys']}>
+                        <Tooltip content={item.name} position="leftTop" style={{ width: 200, wordBreak: 'break-all' }}>
+
+                            <List.Item className='key-list-item' onClick={() => {
+                                dispatch({
+                                    type: 'connection/save',
+                                    payload: {currentSelectedKey: {key: item.name, keyType: item.type}}
+                                })
+                            }}>
+                                <Tag className='tag-semi-tag' color={RedisKeyType[item.type]}>
+                                    {item.type}</Tag>
+                                <span style={{
+                                    marginLeft: 8, whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                }}>{item.name}</span>
+                            </List.Item>
+                        </Tooltip>
+                    </Skeleton>
 
                 }
             />
         </div>
-        // <div className="keyLeft">
-        //     <Row className="keyLeftTop">
-        //         <Col span={20}>
-        //             <Input placeholder="请输入redis key" />
-        //         </Col>
-        //         <Col span={4}>
-        //             <IconTerminal />
-        //         </Col>
-
-        //     </Row>
-        // </div>
     )
 }
 

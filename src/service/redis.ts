@@ -65,6 +65,16 @@ export default class RedisService {
         return items;
     }
 
+    static async getString({ redis, key }) {
+        const result = await redis.get(key)
+        return result;
+    }
+
+    static async setString({redis, key, value}: any) {
+        const result = await redis.set(key, value)
+        return result
+    }
+
     static async getType(redis, key: string) {
         return await redis.type(key);
     }
