@@ -1,23 +1,32 @@
 import { IconCoinMoneyStroked, IconGithubLogo, IconLanguage, IconMoon, IconSetting, IconSun } from '@douyinfe/semi-icons';
 import { Button, Nav, Space } from '@douyinfe/semi-ui';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import intl from 'react-intl-universal';
 import logo from '../../../assets/logo.svg';
 import { Lang } from '../../type.d.ts/Lang';
 import { ThemeType } from '../../type.d.ts/theme';
+import {connect} from "dva";
+import {GlobalModelType, GlobalState} from "../../models/global";
 
+interface PedisHeaderProps {
+    lang: Lang;
+    global: GlobalState;
+    dispatch: any;
+}
 
-export default (lang: Lang) => {
+const PedisHeader: React.FC<PedisHeaderProps> = ({lang, global, dispatch}: PedisHeaderProps) => {
 
-    const getTheme = () => {
-        // get theme, default light
-        return localStorage.getItem("pedis-theme") || ThemeType.LIGHT
-    }
+    const {theme} = global;
 
-    const [mode, setMode] = useState<string>(getTheme());
+    // const getTheme = () => {
+    //     // get theme, default light
+    //     return localStorage.getItem("pedis-theme") || PedisTheme.light
+    // }
+
+    // const [mode, setMode] = useState<string>(getTheme());
 
     useEffect(() => {
-        const theme = getTheme()
+        // const theme = getTheme()
         if (theme === ThemeType.LIGHT) {
             document.body.removeAttribute("theme-mode");
         } else {
@@ -25,16 +34,27 @@ export default (lang: Lang) => {
         }
     }, [])
 
+    const onChangeTheme = (mode: 'light' | 'dark') => {
+        dispatch({
+            type: 'global/save',
+            payload: {
+                theme: mode
+            }
+        })
+        localStorage.setItem("pedis-theme", mode)
+    }
+
     const onSwitchMode = () => {
         const body = document.body;
         if (body.hasAttribute('theme-mode')) {
             body.removeAttribute('theme-mode');
-            setMode(ThemeType.LIGHT);
-            localStorage.setItem("pedis-theme", 'light')
+            onChangeTheme(ThemeType.LIGHT)
+            // setMode(ThemeType.LIGHT);
+            // localStorage.setItem("pedis-theme", 'light')
         } else {
             body.setAttribute('theme-mode', ThemeType.DARK);
-            setMode(ThemeType.DARK);
-            localStorage.setItem("pedis-theme", ThemeType.DARK)
+            onChangeTheme(ThemeType.DARK);
+            // localStorage.setItem("pedis-theme", ThemeType.DARK)
         }
     }
 
@@ -59,13 +79,14 @@ export default (lang: Lang) => {
                         {intl.get("menu.sponsor")}
                     </Button>
                     <Button icon={
-                        mode === 'dark' ? <IconSun style={{ color: '#9C27B0' }} /> : <IconMoon style={{ color: '#6700ff' }} />
+                        theme === ThemeType.DARK ? <IconSun style={{ color: '#9C27B0' }} /> : <IconMoon style={{ color: '#6700ff' }} />
                     } onClick={() => {
                         onSwitchMode()
                     }}>
                     </Button>
                     <Button type="tertiary" theme="borderless"
                         onClick={() => {
+                            console.log(lang)
                             lang.setLang(lang.lang === "zh" ? 'en' : 'zh')
                         }}
                         icon={<IconLanguage style={{ color: "#333" }} />}>
@@ -88,3 +109,5 @@ export default (lang: Lang) => {
         />
     )
 }
+
+export default connect(({ global }) => ({ global }))(PedisHeader);

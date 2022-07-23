@@ -1,6 +1,6 @@
-import { Value } from "@douyinfe/semi-ui/lib/es/tree";
-import { Effect } from "dva";
-import { removeConfig } from "../service/config";
+import {Value} from "@douyinfe/semi-ui/lib/es/tree";
+import {Effect} from "dva";
+import {removeConfig} from "../service/config";
 import RedisService from "../service/redis";
 import tree from "../utils/tree";
 
@@ -38,11 +38,13 @@ export interface StateProps {
     redisConn?: any;
     redisKeys: Map<number, number>;
     keyData: RedisKeyProps[],
+    keyList: RedisKeyProps[],
     keyType: RedisKeyProps[],
     activeRedisKey: string;
 
     currentSelectedKey: {},
     currentStringValue: string;
+    ttl: number;
 }
 
 export type ConnectionModelType = {
@@ -54,10 +56,13 @@ export type ConnectionModelType = {
         loadKeys: Effect;
         getString: Effect;
         setString: Effect;
+        renameKey: Effect;
+        ttl: Effect;
     };
     reducers: {
         save: any;
         updateConnectionStatus: any;
+        editKeyName: any;
     };
 };
 
@@ -89,10 +94,12 @@ const Model: ConnectionModelType = {
         redisConn: null,
         redisKeys: new Map<number, number>(),
         keyData: [],
+        keyList: [],
         keyType: [],
         activeRedisKey: '',
         currentStringValue: '',
         currentSelectedKey: {},
+        ttl: 0,
     },
 
     reducers: {
@@ -108,40 +115,53 @@ const Model: ConnectionModelType = {
                 ...state,
                 redisConn: action.payload
             }
+        },
+
+        editKeyName(state: StateProps, action: { payload: any }) {
+            const data = [...state.keyList]
+            const idx = data.findIndex(item => item.name === action.payload.old)
+            if (idx > -1) {
+                data[idx] = {...data[idx], name: action.payload.now}
+            }
+            return {
+                ...state,
+                currentSelectedKey: {...state.currentSelectedKey, key: action.payload.now},
+                keyList: data,
+            }
         }
     },
 
     effects: {
-        * removeConnections({ payload }, { put, call }) {
+        * removeConnections({payload}, {put, call}) {
             const res = yield call(removeConfig, payload.uid);
             const treeData = tree.render(res, payload.dispatch)
             if (res) {
                 yield put({
                     type: 'save',
-                    payload: { treeData }
+                    payload: {treeData}
                 })
                 return true;
             }
             return false;
         },
 
-        * testConnection({ payload }, { call, put }) {
+        * testConnection({payload}, {call, put}) {
             yield put({
                 type: 'save',
-                payload: { treeLoading: true }
+                payload: {treeLoading: true}
             })
             yield call(RedisService.connect, payload);
         },
 
-        * loadKeys({ payload }, { call, put }) {
+        * loadKeys({payload}, {call, put}) {
             const res = yield call(RedisService.fetchKeys, payload)
             yield put({
                 type: 'save',
-                payload: { keyData: res }
+                payload: {keyData: res}
             })
         },
 
-        * getString({ payload }, { call, put }) {
+        * getString({payload}, {call, put}) {
             const res = yield call(RedisService.getString, payload);
             yield put({
                 type: 'save',
@@ -151,9 +171,20 @@ const Model: ConnectionModelType = {
             })
         },
 
-        * setString({ payload }, { call, put }) {
-            const res = yield call(RedisService.setString, payload);
-            return res;
+        * setString({payload}, {call, put}) {
+            return yield call(RedisService.setString, payload);
+        },
+
+        * renameKey({payload}, {call, put}) {
+            return yield call(RedisService.renameKey, payload);
+        },
+
+        * ttl({payload}, {call, put}) {
+            const res = yield call(RedisService.ttl, payload);
+            yield put({
+                type: 'save',
+                payload: {ttl: res}
+            })
         }
     }
 }

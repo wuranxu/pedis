@@ -1,4 +1,4 @@
-import { Toast } from '@douyinfe/semi-ui';
+import {Toast} from '@douyinfe/semi-ui';
 import intl from 'react-intl-universal';
 // import Redis from 'ioredis';
 let Redis = window.require('ioredis')
@@ -15,7 +15,7 @@ export default class RedisService {
     static cache = new Map();
 
     static getKey(params: RedisConnectionProps) {
-        const { name, host, port, password } = params;
+        const {name, host, port, password} = params;
         return `${name}_${host}_${port}_${password}`
     }
 
@@ -50,7 +50,7 @@ export default class RedisService {
         return data.split("\n")
     }
 
-    static async fetchKeys({ redis, key }) {
+    static async fetchKeys({redis, key}) {
         let searchKey = key;
         if (key === undefined || key === '') {
             searchKey = `*`
@@ -59,20 +59,25 @@ export default class RedisService {
         const items = []
         for await (const key of keys) {
             const tp = await RedisService.getType(redis, key)
-            items.push({ name: key, type: tp.toUpperCase() })
+            items.push({name: key, type: tp.toUpperCase()})
         }
-        console.log(items)
         return items;
     }
 
-    static async getString({ redis, key }) {
-        const result = await redis.get(key)
-        return result;
+    static async getString({redis, key}) {
+        return await redis.get(key);
     }
 
     static async setString({redis, key, value}: any) {
-        const result = await redis.set(key, value)
-        return result
+        return await redis.set(key, value)
+    }
+
+    static async renameKey({redis, old, now}: any) {
+        return await redis.rename(old, now)
+    }
+
+    static async ttl({redis, key}: any) {
+        return await redis.ttl(key)
     }
 
     static async getType(redis, key: string) {
@@ -85,7 +90,7 @@ export default class RedisService {
             redis.disconnect()
             dispatch({
                 type: "connection/save",
-                payload: { treeLoading: false }
+                payload: {treeLoading: false}
             })
             if (setRedis) {
                 dispatch({
@@ -100,7 +105,7 @@ export default class RedisService {
             await redis.ping()
             dispatch({
                 type: "connection/save",
-                payload: { treeLoading: false }
+                payload: {treeLoading: false}
             })
             if (setRedis) {
                 dispatch({

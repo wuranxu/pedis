@@ -53,6 +53,8 @@
     "key.list.loadMore": "Load More",
     "key.save": "Click to save",
     "key.copy": "Click to copy key name",
+    "key.expire": "left time",
+    "key.edit": "Click to edit key name",
     "key.hex_to_str": "Convert hex to string"
 
 }

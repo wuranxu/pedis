@@ -1,20 +1,30 @@
-import { connect } from "dva";
-import { useEffect } from "react";
-import { ConnectState } from "../../models/connect";
-import { StateProps } from "../../models/connection";
+import {connect} from "dva";
+import {useEffect} from "react";
+import {ConnectState} from "../../models/connect";
+import {StateProps} from "../../models/connection";
 import Editor from "../Editor";
+import {GlobalState} from "../../models/global";
 
 interface StringKeyProps {
     connection: StateProps;
+    global: GlobalState;
     key: string;
     dispatch: any;
     loading: any;
     editorRef: any;
 }
 
-const StringKey: React.FC<StringKeyProps> = ({ key, connection, loading, dispatch, editorRef }: StringKeyProps) => {
+const StringKey: React.FC<StringKeyProps> = ({
+                                                 key,
+                                                 connection,
+                                                 loading,
+                                                 global,
+                                                 dispatch,
+                                                 editorRef
+                                             }: StringKeyProps) => {
 
-    const { redisConn, currentStringValue, currentSelectedKey } = connection;
+    const {redisConn, currentStringValue, currentSelectedKey} = connection;
+    const {theme} = global;
 
     useEffect(() => {
         dispatch({
@@ -27,8 +37,8 @@ const StringKey: React.FC<StringKeyProps> = ({ key, connection, loading, dispatc
 
 
     return (
-        <Editor value={currentStringValue} language="text" editorRef={editorRef} />
+        <Editor value={currentStringValue} language="text" editorRef={editorRef} theme={theme}/>
     )
 }
 
-export default connect(({ connection, loading }: ConnectState) => ({ connection, loading }))(StringKey);
+export default connect(({connection, loading, global}: ConnectState) => ({connection, loading, global}))(StringKey);

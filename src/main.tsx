@@ -10,6 +10,7 @@ import { LocaleProvider } from '@douyinfe/semi-ui';
 import dva from 'dva';
 import Locale from './components/Locale';
 import connection from './models/connection';
+import global from './models/global';
 import './userWorker';
 
 const LocaleApp = () => {
@@ -37,6 +38,7 @@ const LocaleApp = () => {
 
 const app = dva(createLoading());
 app.model(connection);
+app.model(global)
 app.router(() => <LocaleApp />);
 
 // 5. Start

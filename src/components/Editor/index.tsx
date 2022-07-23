@@ -1,6 +1,7 @@
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import "./index.css";
+import {ThemeType} from "../../type.d.ts/theme";
 
 interface EditorProps {
     editorRef: any;
@@ -13,13 +14,11 @@ interface EditorProps {
 }
 
 
-
-
 const Editor: React.FC<EditorProps> = (props: EditorProps) => {
 
     const [editor, setEditor] = useState<monaco.editor.IStandaloneCodeEditor | null>(null);
 
-    const { editorRef: monacoEl } = props;
+    const {editorRef: monacoEl} = props;
 
     useEffect(() => {
         if (monacoEl && !editor) {
@@ -27,7 +26,7 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
                 value: props.value,
                 language: props.language,
                 automaticLayout: true,
-                theme: 'vs-dark',
+                theme: props.theme === ThemeType.LIGHT ? 'vs-light' : 'vs-dark',
                 selectOnLineNumbers: true,
                 maxTokenizationLineLength: 10000,
             })
@@ -41,6 +40,11 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
     useEffect(() => {
         editor?.setValue(props.value)
     }, [props.value])
+
+    useEffect(() => {
+        console.log(props.theme)
+        editor?.updateOptions({theme: props.theme === ThemeType.LIGHT ? 'vs-light' : 'vs-dark'})
+    }, [props.theme])
 
     return (
         <div id="pedis-monaco" ref={monacoEl}>

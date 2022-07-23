@@ -1,24 +1,24 @@
-import { IconChevronUpDown, IconHelpCircle, IconKey, IconLoading, IconPlus } from '@douyinfe/semi-icons';
+import {IconChevronUpDown, IconHelpCircle, IconKey, IconLoading, IconPlus} from '@douyinfe/semi-icons';
 import {
     IllustrationIdle,
     IllustrationIdleDark,
     IllustrationNoResult,
     IllustrationNoResultDark
 } from '@douyinfe/semi-illustrations';
-import { Banner, Button, Col, Empty, Row, Select, Spin } from '@douyinfe/semi-ui';
-import { connect } from 'dva';
-import { useEffect, useState } from 'react';
-import intl, { load } from "react-intl-universal";
+import {Banner, Button, Col, Empty, Row, Select, Spin} from '@douyinfe/semi-ui';
+import {connect} from 'dva';
+import {useEffect} from 'react';
+import intl from "react-intl-universal";
 import SplitPane from 'react-split-pane';
 import LeftTree from '../components/Connection';
 import ConnectionModal from '../components/Connection/ConnectionModal';
 import PedisHeader from '../components/Header';
 import RedisTab from '../components/PedisTab';
-import { ConnectState } from '../models/connect';
-import { StateProps } from '../models/connection';
+import {ConnectState} from '../models/connect';
+import {StateProps} from '../models/connection';
 import ConfigService from '../service/config';
 import RedisService from '../service/redis';
-import { Lang } from '../type.d.ts/Lang';
+import {Lang} from '../type.d.ts/Lang';
 import tree from '../utils/tree';
 import "./App.css";
 
@@ -30,25 +30,34 @@ interface AppProps {
 }
 
 
-const App = ({ language: { lang, setLang }, connection, dispatch, loading }: AppProps) => {
+const App = ({language: {lang, setLang}, connection, dispatch, loading}: AppProps) => {
 
-    const { treeData, treeLoading, activeKey, currentConnection, tabList, selectedKeys, dbNum, currentDb, redisConn, redisKeys } = connection;
-
-    const [leftSize, setLeftSize] = useState<number>(300);
+    const {
+        treeData,
+        treeLoading,
+        activeKey,
+        currentConnection,
+        tabList,
+        selectedKeys,
+        dbNum,
+        currentDb,
+        redisConn,
+        redisKeys
+    } = connection;
 
     const onLoadConfig = async (): Promise<void> => {
         const data = await ConfigService.readConfig()
         const treeData = tree.render(data, dispatch);
         dispatch({
             type: 'connection/save',
-            payload: { treeData }
+            payload: {treeData}
         })
     }
 
     const onSelectDb = (value: number | null | any) => {
         dispatch({
             type: 'connection/save',
-            payload: { currentDb: value }
+            payload: {currentDb: value}
         })
     }
 
@@ -79,12 +88,12 @@ const App = ({ language: { lang, setLang }, connection, dispatch, loading }: App
             const dbNumber = parseInt(database, 10)
             dispatch({
                 type: 'connection/save',
-                payload: { dbNum: dbNumber, redisKeys: getKeys(keys) }
+                payload: {dbNum: dbNumber, redisKeys: getKeys(keys)}
             })
             if (currentDb === null || currentDb >= dbNumber) {
                 dispatch({
                     type: 'connection/save',
-                    payload: { currentDb: 0 }
+                    payload: {currentDb: 0}
                 })
             }
         }
@@ -109,29 +118,29 @@ const App = ({ language: { lang, setLang }, connection, dispatch, loading }: App
     // @ts-ignore
     return (
         <Row>
-            <ConnectionModal lang={lang} />
-            <PedisHeader lang={lang} setLang={setLang} />
+            <ConnectionModal lang={lang}/>
+            <PedisHeader lang={{lang, setLang}}/>
             {/*
         // @ts-ignore */}
             <SplitPane className="pedis-split" split="vertical" minSize={260} defaultSize={260} maxSize={260}>
                 <Row className="leftTree">
                     <Spin size="small" tip={intl.get("common.loading")} spinning={treeLoading}
-                        indicator={<IconLoading />}>
-                        {treeData.length > 0 ? <LeftTree treeData={treeData} /> : <div className="emptyTree">
+                          indicator={<IconLoading/>}>
+                        {treeData.length > 0 ? <LeftTree treeData={treeData}/> : <div className="emptyTree">
                             <Empty
-                                style={{ marginTop: '-24%' }}
-                                image={<IllustrationNoResult style={{ width: 120, height: 120 }} />}
-                                darkModeImage={<IllustrationNoResultDark style={{ width: 120, height: 120 }} />}
+                                style={{marginTop: '-24%'}}
+                                image={<IllustrationNoResult style={{width: 120, height: 120}}/>}
+                                darkModeImage={<IllustrationNoResultDark style={{width: 120, height: 120}}/>}
                                 title={intl.get("empty.no_connection_config")}
                                 description={intl.get("empty.no_connection_config.desc")}>
-                                <div style={{ textAlign: 'center' }}>
+                                <div style={{textAlign: 'center'}}>
                                     <Button onClick={() => {
                                         dispatch({
                                             type: 'connection/save',
-                                            payload: { visible: true, currentConnection: { port: 6379 }, mode: 'create' }
+                                            payload: {visible: true, currentConnection: {port: 6379}, mode: 'create'}
                                         })
-                                    }} type="secondary" icon={<IconPlus />}
-                                        theme='light'>{intl.get("menu.create_conn")}</Button>
+                                    }} type="secondary" icon={<IconPlus/>}
+                                            theme='light'>{intl.get("menu.create_conn")}</Button>
                                 </div>
                             </Empty>
                         </div>
@@ -142,38 +151,39 @@ const App = ({ language: { lang, setLang }, connection, dispatch, loading }: App
                     <Spin spinning={false}>
                         {
                             tabList.length === 0 || !selectedKeys ? <div className='emptyTree'>
-                                <Empty
-                                    style={{ marginTop: '-15%' }}
-                                    image={<IllustrationIdle style={{ width: 180, height: 230 }} />}
-                                    darkModeImage={<IllustrationIdleDark style={{ width: 180, height: 230 }} />}
-                                    title={intl.get("empty.no_connection")}
-                                    description={intl.get("empty.no_connection_desc")}
-                                >
-                                    <div style={{ display: "flex" }}>
-                                        <Button style={{ padding: '0 24px', marginRight: 12 }} type="primary"
-                                            icon={<IconHelpCircle />}>
-                                            {intl.get("empty.see_document")}
-                                        </Button>
-                                        <Button style={{ padding: '0 24px' }} theme="solid" type="primary" icon={<IconPlus />}
-                                            onClick={() => {
-                                                dispatch({
-                                                    type: 'connection/save',
-                                                    payload: {
-                                                        visible: true,
-                                                        currentConnection: { port: 6379 },
-                                                        mode: "create"
-                                                    }
-                                                })
-                                            }}>
-                                            {intl.get("empty.new_connection")}
-                                        </Button>
-                                    </div>
-                                </Empty>
-                            </div> :
+                                    <Empty
+                                        style={{marginTop: '-15%'}}
+                                        image={<IllustrationIdle style={{width: 180, height: 230}}/>}
+                                        darkModeImage={<IllustrationIdleDark style={{width: 180, height: 230}}/>}
+                                        title={intl.get("empty.no_connection")}
+                                        description={intl.get("empty.no_connection_desc")}
+                                    >
+                                        <div style={{display: "flex"}}>
+                                            <Button style={{padding: '0 24px', marginRight: 12}} type="primary"
+                                                    icon={<IconHelpCircle/>}>
+                                                {intl.get("empty.see_document")}
+                                            </Button>
+                                            <Button style={{padding: '0 24px'}} theme="solid" type="primary"
+                                                    icon={<IconPlus/>}
+                                                    onClick={() => {
+                                                        dispatch({
+                                                            type: 'connection/save',
+                                                            payload: {
+                                                                visible: true,
+                                                                currentConnection: {port: 6379},
+                                                                mode: "create"
+                                                            }
+                                                        })
+                                                    }}>
+                                                {intl.get("empty.new_connection")}
+                                            </Button>
+                                        </div>
+                                    </Empty>
+                                </div> :
                                 <div className="rightConnection">
                                     <RedisTab activeKey={activeKey} dispatch={dispatch} tabList={tabList}
-                                        redisConn={redisConn} currentConnection={currentConnection}
-                                        selectedKeys={selectedKeys} />
+                                              redisConn={redisConn} currentConnection={currentConnection}
+                                              selectedKeys={selectedKeys}/>
                                 </div>
                         }
 
@@ -183,15 +193,18 @@ const App = ({ language: { lang, setLang }, connection, dispatch, loading }: App
                                     <Col span={6}>
                                         <Select
                                             showArrow={false}
-                                            suffix={<IconChevronUpDown />}
+                                            suffix={<IconChevronUpDown/>}
                                             placeholder={intl.get("database.tip")}
-                                            onChange={onSelectDb} style={{ width: '100%', borderRadius: 0 }} value={currentDb}>
+                                            onChange={onSelectDb} style={{width: '100%', borderRadius: 0}}
+                                            value={currentDb}>
                                             {getDb()}
                                         </Select>
                                     </Col>
                                     <Col span={18}>
-                                        <Banner className="bottomBanner" fullMode={false} type="info" icon={<IconKey className='bannerIcon' />} closeIcon={null}
-                                            title={<div className="banner">{intl.get("banner.keys.total")} {redisKeys.get(currentDb) || 0}{intl.get("banner.keys.per")} keys</div>} />
+                                        <Banner className="bottomBanner" fullMode={false} type="info"
+                                                icon={<IconKey className='bannerIcon'/>} closeIcon={null}
+                                                title={<div
+                                                    className="banner">{intl.get("banner.keys.total")} {redisKeys.get(currentDb) || 0}{intl.get("banner.keys.per")} keys</div>}/>
                                     </Col>
                                 </Row>
                             }
@@ -205,4 +218,4 @@ const App = ({ language: { lang, setLang }, connection, dispatch, loading }: App
     )
 }
 
-export default connect(({ connection, loading }: ConnectState) => ({ connection, loading }))(App)
+export default connect(({connection, loading}: ConnectState) => ({connection, loading}))(App)
