@@ -54,6 +54,8 @@ export default class RedisService {
         let searchKey = key;
         if (key === undefined || key === '') {
             searchKey = `*`
+        } else if (key.indexOf("*") === -1) {
+            searchKey = `*${key}*`
         }
         const keys = await redis.keys(searchKey)
         const items = []
@@ -78,6 +80,14 @@ export default class RedisService {
 
     static async ttl({redis, key}: any) {
         return await redis.ttl(key)
+    }
+
+    static async expireKey({redis, key, seconds}: any) {
+        return await redis.expire(key, seconds)
+    }
+
+    static async persist({redis, key}: any) {
+        return await redis.persist(key)
     }
 
     static async getType(redis, key: string) {

@@ -1,5 +1,12 @@
-import {IconBookH5Stroked, IconCopyStroked, IconEditStroked, IconSaveStroked} from "@douyinfe/semi-icons";
-import {Card, Col, Input, Row, Space, Tag, Toast, Tooltip, Typography} from "@douyinfe/semi-ui";
+import {
+    IconBookH5Stroked,
+    IconCopyStroked,
+    IconEditStroked,
+    IconHelpCircleStroked, IconRefresh,
+    IconSaveStroked,
+    IconUndo
+} from "@douyinfe/semi-icons";
+import {Card, Col, Input, InputNumber, Row, Space, Tag, Toast, Tooltip, Typography} from "@douyinfe/semi-ui";
 import {connect} from "dva";
 import React, {useRef, useState} from 'react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
@@ -9,6 +16,8 @@ import {RedisKeyType, StateProps} from "../../models/connection";
 import {hexToString} from "../../utils/string";
 import StringKey from "./StringKey";
 import {useInterval} from "ahooks";
+import RedisService from "../../service/redis";
+import "./index.css"
 
 
 const {Text} = Typography;
@@ -21,9 +30,11 @@ interface KeyProps {
 }
 
 const KeyIndex: React.FC<KeyProps> = ({dispatch, connection}: KeyProps) => {
-    const {currentSelectedKey, redisConn, currentStringValue, ttl} = connection;
+    const {currentSelectedKey, redisConn, currentStringValue} = connection;
     const editorRef = useRef(null);
     const [editing, setEditing] = useState<boolean>(false);
+    const [editingExpire, setEditingExpire] = useState<boolean>(false);
+    const [ttl, setTtl] = useState<number>(0);
 
     const renderKey = () => {
         switch (currentSelectedKey.keyType) {
@@ -55,11 +66,36 @@ const KeyIndex: React.FC<KeyProps> = ({dispatch, connection}: KeyProps) => {
         Toast.error(intl.get("common.failed"))
     }
 
+    const getTtl = () => {
+        if (ttl === -1) {
+            return intl.get("key.no_expire")
+        }
+        if (ttl === -2) {
+            return intl.get("key.expired")
+        }
+        if (ttl === 0) {
+            return intl.get("key.expire.loading")
+        }
+        return `${ttl}s`
+    }
+
     const renderTitle = (title: string) => {
+
+        useInterval(async () => {
+            if (currentSelectedKey?.key && ttl >= 0) {
+                const res = await RedisService.ttl({redis: redisConn, key: currentSelectedKey.key})
+                // dispatch({
+                //     type: 'connection/ttl',
+                //     payload: {redis: redisConn, key: currentSelectedKey.key}
+                // })
+                setTtl(res)
+            }
+        }, 1000);
+
         return (
             <div>
-                <Row gutter={12}>
-                    <Col span={12}>
+                <Row gutter={8}>
+                    <Col span={11}>
                         <Tooltip content={title}>
                             {
                                 !editing ? <Text
@@ -67,15 +103,55 @@ const KeyIndex: React.FC<KeyProps> = ({dispatch, connection}: KeyProps) => {
                                     style={{width: '100%', fontWeight: 600}}
                                 >
                                     {title}
-                                </Text> : <Input size="small" defaultValue={title} onEnterPress={e => {
-                                    const newKeyName = e.target.value;
-                                    onRenameKey(title, newKeyName)
-                                }}/>
+                                </Text> : <Input size="small" defaultValue={title}
+                                                 suffix={
+                                                     <IconUndo style={{fontSize: 14}} onClick={() => {
+                                                         setEditing(false)
+                                                     }}/>
+                                                 }
+                                                 onEnterPress={e => {
+                                                     const newKeyName = e.target.value;
+                                                     onRenameKey(title, newKeyName)
+                                                 }}/>
                             }
                         </Tooltip>
                     </Col>
-                    <Col span={6}>
-                        {intl.get("key.expire")} <Tag size="small" style={{marginLeft: 4}} color='blue'>{ttl}s</Tag>
+                    <Col span={7}>
+                        {intl.get("key.expire")}
+                        {!editingExpire ?
+                            <Tag onClick={() => {
+                                if (ttl === -2) {
+                                    Toast.warning(intl.get("key.expire.message"))
+                                }
+                                setEditingExpire(true)
+                            }} size="small" style={{marginLeft: 4}} color='blue'>
+                                <Tooltip content={intl.get("key.expire.help")}>
+                                    <IconHelpCircleStroked style={{marginRight: 4}}/>
+                                </Tooltip>
+                                {getTtl()}
+                            </Tag> :
+                            <InputNumber size="small" style={{width: 112, marginLeft: 6}} min={-1} defaultValue={ttl}
+                                         onEnterPress={async e => {
+                                             const seconds = e.target.value
+                                             const res = await dispatch({
+                                                 type: 'connection/expireKey',
+                                                 payload: {
+                                                     redis: redisConn,
+                                                     key: title,
+                                                     seconds
+                                                 }
+                                             })
+                                             if (res) {
+                                                 setEditingExpire(false)
+                                                 setTtl(parseInt(seconds))
+                                             }
+                                         }}
+                                         suffix={
+                                             <IconUndo style={{fontSize: 14}} onClick={() => {
+                                                 setEditingExpire(false)
+                                             }}/>
+                                         }/>
+                        }
                     </Col>
                     <Col span={6}>
                         <div style={{float: 'right'}}>
@@ -88,7 +164,7 @@ const KeyIndex: React.FC<KeyProps> = ({dispatch, connection}: KeyProps) => {
                                                      onCopy={() => {
                                                          Toast.success(intl.get("common.success"))
                                                      }}>
-                                        <IconCopyStroked style={{color: "var(--semi-color-success)"}}/>
+                                        <IconCopyStroked className="icon-copy"/>
                                     </CopyToClipboard>
                                 </Tooltip>
                                 <Tooltip content={intl.get("key.hex_to_str")}>
@@ -114,6 +190,11 @@ const KeyIndex: React.FC<KeyProps> = ({dispatch, connection}: KeyProps) => {
                                         Toast.error(intl.get("common.failed"))
                                     }}/>
                                 </Tooltip>
+                                <Tooltip content={intl.get("key.reload")}>
+                                    <IconRefresh style={{color: 'var(--semi-color-danger-hover)'}} onClick={() => {
+                                        editorRef.editor.setValue(currentStringValue);
+                                    }}/>
+                                </Tooltip>
                             </Space>
                         </div>
                     </Col>
@@ -123,21 +204,20 @@ const KeyIndex: React.FC<KeyProps> = ({dispatch, connection}: KeyProps) => {
         )
     }
 
-    useInterval(() => {
-        if (currentSelectedKey?.key) {
-            dispatch({
-                type: 'connection/ttl',
-                payload: {redis: redisConn, key: currentSelectedKey.key}
-            })
-        }
-    }, 1000);
-
     return (
         <Card title={renderTitle(currentSelectedKey.key)} bordered={false} shadows="hover"
-              bodyStyle={{height: 'calc(100vh - 203pxø)', padding: 0}}>
+              bodyStyle={{height: 'calc(100vh - 203px)', padding: 0}}>
             {renderKey()}
         </Card>
     )
 }
 
-export default connect(({connection, loading}: ConnectState) => ({connection, loading}))(KeyIndex);
+export default connect((
+    {
+        connection, loading
+    }
+        : ConnectState) => (
+    {
+        connection, loading
+    }
+))(KeyIndex);

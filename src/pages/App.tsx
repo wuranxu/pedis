@@ -120,8 +120,7 @@ const App = ({language: {lang, setLang}, connection, dispatch, loading}: AppProp
         <Row>
             <ConnectionModal lang={lang}/>
             <PedisHeader lang={{lang, setLang}}/>
-            {/*
-        // @ts-ignore */}
+            {/*// @ts-ignore */}
             <SplitPane className="pedis-split" split="vertical" minSize={260} defaultSize={260} maxSize={260}>
                 <Row className="leftTree">
                     <Spin size="small" tip={intl.get("common.loading")} spinning={treeLoading}

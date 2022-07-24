@@ -3,6 +3,8 @@ import {Effect} from "dva";
 import {removeConfig} from "../service/config";
 import RedisService from "../service/redis";
 import tree from "../utils/tree";
+import {Toast} from "@douyinfe/semi-ui";
+import intl from 'react-intl-universal';
 
 export interface ConnectionState {
     data?: string;
@@ -58,6 +60,7 @@ export type ConnectionModelType = {
         setString: Effect;
         renameKey: Effect;
         ttl: Effect;
+        expireKey: Effect;
     };
     reducers: {
         save: any;
@@ -157,7 +160,7 @@ const Model: ConnectionModelType = {
             const res = yield call(RedisService.fetchKeys, payload)
             yield put({
                 type: 'save',
-                payload: {keyData: res}
+                payload: {keyData: res, keyList: res.slice(0, 10)}
             })
         },
 
@@ -185,6 +188,25 @@ const Model: ConnectionModelType = {
                 type: 'save',
                 payload: {ttl: res}
             })
+        },
+
+        * expireKey({payload}, {call, put}) {
+            let res;
+            if (payload.seconds === "-1") {
+                res = yield call(RedisService.persist, payload);
+            } else {
+                res = yield call(RedisService.expireKey, payload);
+            }
+            if (res === 1) {
+                Toast.success(intl.get("common.success"))
+                yield put({
+                    type: 'save',
+                    payload: {ttl: payload.seconds}
+                })
+                return true
+            }
+            Toast.error(intl.get("common.failed"))
+            return false
         }
     }
 }

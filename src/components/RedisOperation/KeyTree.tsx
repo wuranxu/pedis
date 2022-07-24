@@ -27,12 +27,12 @@ const KeyTree = ({connection, dispatch, loading}: KeyTreeProps) => {
 
     const [view, setView] = useState<View>(View.list);
     const [count, setCount] = useState<number>(0);
-    const [key, setKey] = useState<string>('');
+    const [value, setValue] = useState<string>('');
     const [selectedKey, setSelectedKey] = useState<string>('');
 
     useEffect(() => {
-        loadKeys(key)
-    }, [key])
+        loadKeys(value)
+    }, [])
 
     useEffect(() => {
         dispatch({
@@ -43,7 +43,7 @@ const KeyTree = ({connection, dispatch, loading}: KeyTreeProps) => {
         })
     }, [count])
 
-    const loadKeys = async (redisKey: string = key) => {
+    const loadKeys = async (redisKey: string = value) => {
         await dispatch({
             type: 'connection/loadKeys',
             payload: {
@@ -53,11 +53,6 @@ const KeyTree = ({connection, dispatch, loading}: KeyTreeProps) => {
         setCount(1)
     }
 
-    const MyInput = () => {
-        return <Input size="small" style={{width: '92%'}} onCompositionEnd={(v) => onSearch(v.target.value)}
-                      onChange={(v) => !v ? onSearch() : null} placeholder={intl.get("search.key")}
-                      prefix={<IconSearch/>}/>
-    }
 
     const onLoadMore = () => {
         dispatch({
@@ -69,9 +64,17 @@ const KeyTree = ({connection, dispatch, loading}: KeyTreeProps) => {
         setCount(count + 1)
     }
 
-    const ListHeader = () => <Row>
+    const ListHeader = <Row>
         <Col span={18}>
-            <MyInput/>
+            <Input size="small" style={{width: '92%'}} placeholder={intl.get("search.key")} onEnterPress={e => {
+                loadKeys(e.target.value)
+            }} value={value} onChange={str => setValue(str)}/>
+            {/*<Input size="small" style={{width: '92%'}}*/}
+            {/*    // autofocus*/}
+
+            {/*       value={value}*/}
+            {/*       onChange={(e) => setValue(e)} placeholder={intl.get("search.key")}*/}
+            {/*       prefix={<IconSearch/>}/>*/}
         </Col>
         <Col span={6}>
             <div className="operations">
@@ -89,13 +92,7 @@ const KeyTree = ({connection, dispatch, loading}: KeyTreeProps) => {
 
 
     const onSearch = (key: string) => {
-        // let newList;
-        // if (string) {
-        //     newList = data.filter(item => item.includes(string));
-        // } else {
-        //     newList = data;
-        // }
-        // setList(newList);
+        loadKeys(key)
     };
 
     const loadMore =
@@ -145,12 +142,12 @@ const KeyTree = ({connection, dispatch, loading}: KeyTreeProps) => {
                         description={intl.get("empty.no_keys.desc")}>
                     </Empty>
                 }
-                header={<ListHeader/>}
+                header={ListHeader}
                 loadMore={loadMore}
                 renderItem={item =>
                     <Skeleton placeholder={placeholder} loading={loading.effects['connection/loadKeys']}>
                         <Tooltip content={item.name} position="leftTop" style={{width: 200, wordBreak: 'break-all'}}>
-                            <List.Item className='key-list-item'
+                            <List.Item className='key-list-item' key={item.name}
                                        style={{background: item.name === selectedKey ? 'var(--semi-color-primary-light-default)' : "inherit"}}
                                        onClick={() => {
                                            setSelectedKey(item.name)
