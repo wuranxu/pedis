@@ -47,11 +47,11 @@ function createWindow() {
     let openDevTools = true;
     if (app.isPackaged) {
         // 生产环境，不开启devtools
-        openDevTools = false;
+        openDevTools = true;
     }
     mainWindow = new BrowserWindow({
         show: false,
-        width: 1200,
+        width: 1280,
         height: 800,
         webPreferences: {
             nodeIntegration: true,
@@ -72,9 +72,10 @@ function createWindow() {
     // mainWindow.webContents.openDevTools();
 
     if (!app.isPackaged) {
+        // mainWindow.loadFile(path.join(__dirname, './dist/index.html'))
         // 非打包状态，表示开发环境
-        mainWindow.loadURL("http://localhost:3000/");
-        // Open the DevTools.
+        mainWindow.loadURL("http://localhost:5173/");
+        // // Open the DevTools.
         mainWindow.webContents.openDevTools();
     } else {
         // 打包状态，表示生产环境

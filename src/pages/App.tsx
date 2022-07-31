@@ -30,7 +30,7 @@ interface AppProps {
 }
 
 
-const App = ({language: {lang, setLang}, connection, dispatch, loading}: AppProps) => {
+const App = ({language: {lang, setLang}, connection, dispatch}: AppProps) => {
 
     const {
         treeData,

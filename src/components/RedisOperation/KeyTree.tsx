@@ -1,4 +1,3 @@
-import {IconSearch} from '@douyinfe/semi-icons';
 import {Button, Col, Empty, Input, List, Row, Skeleton, Space, Tag, Tooltip} from '@douyinfe/semi-ui';
 import {ListView, Plus, Terminal, TreeDiagram} from '@icon-park/react';
 import {connect} from 'dva';
@@ -125,6 +124,7 @@ const KeyTree = ({connection, dispatch, loading}: KeyTreeProps) => {
         </div>
     );
 
+    // @ts-ignore
     return (
         <div>
             <List
@@ -156,6 +156,7 @@ const KeyTree = ({connection, dispatch, loading}: KeyTreeProps) => {
                                                payload: {currentSelectedKey: {key: item.name, keyType: item.type}}
                                            })
                                        }}>
+                                {/*@ts-ignore*/}
                                 <Tag className='tag-semi-tag' color={RedisKeyType[item.type]}>
                                     {item.type}</Tag>
                                 <span style={{

@@ -53,6 +53,7 @@
   "key.list.loadMore": "加载更多",
   "key.save": "点击保存key",
   "key.copy": "点击复制key名称",
+  "key.copy.success": "复制成功",
   "key.expire": "剩余时间",
   "key.expire.message": "key已过期, 无法设置过期时间",
   "key.expire.help": "点击时间可编辑key过期时间，确定更改请输入Enter, 放弃更改请按ESC",
@@ -60,6 +61,11 @@
   "key.expired": "已过期",
   "key.expire.loading": "加载中...",
   "key.edit": "点击编辑key名称",
+  "key.to_json": "切换为JSON格式",
+  "key.to_string": "切换为String格式",
   "key.reload": "点击恢复key的值",
-  "key.hex_to_str": "将hex转换为string"
+  "key.hex_to_str": "将hex转换为string",
+  "key.delete": "点击删除key",
+  "confirm.delete": "是否确认删除?",
+  "key.tab.reload": "重新加载当前连接的key列表"
 }

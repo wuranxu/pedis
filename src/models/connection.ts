@@ -5,6 +5,7 @@ import RedisService from "../service/redis";
 import tree from "../utils/tree";
 import {Toast} from "@douyinfe/semi-ui";
 import intl from 'react-intl-universal';
+import {TabItemProps} from "../type.d.ts/redis";
 
 export interface ConnectionState {
     data?: string;
@@ -24,6 +25,11 @@ export interface RedisKeyProps {
     type: RedisKeyType;
 }
 
+export enum CodeLanguage {
+    JSON,
+    STRING
+}
+
 export interface StateProps {
     treeData: any[];
     originData: any[];
@@ -32,9 +38,9 @@ export interface StateProps {
     visible: boolean;
     treeLoading: boolean;
     mode: string | 'create';
-    activeKey: string | null;
-    selectedKeys: Value | null;
-    tabList: any[];
+    activeKey: string | undefined;
+    selectedKeys: Value | undefined;
+    tabList: TabItemProps[];
     dbNum: number;
     currentDb: number | null | any;
     redisConn?: any;
@@ -43,8 +49,11 @@ export interface StateProps {
     keyList: RedisKeyProps[],
     keyType: RedisKeyProps[],
     activeRedisKey: string;
-
-    currentSelectedKey: {},
+    currentMode?: string | "text",
+    currentSelectedKey: {
+        keyType?: string,
+        key?: string,
+    },
     currentStringValue: string;
     ttl: number;
 }
@@ -87,9 +96,9 @@ const Model: ConnectionModelType = {
         mode: "create",
 
         // tab and currentKey
-        activeKey: '',
+        activeKey: undefined,
         tabList: [],
-        selectedKeys: null,
+        selectedKeys: undefined,
 
         // database number
         dbNum: 0,
@@ -103,6 +112,7 @@ const Model: ConnectionModelType = {
         currentStringValue: '',
         currentSelectedKey: {},
         ttl: 0,
+        currentMode: "text"
     },
 
     reducers: {

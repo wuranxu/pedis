@@ -23,7 +23,7 @@ const StringKey: React.FC<StringKeyProps> = ({
                                                  editorRef
                                              }: StringKeyProps) => {
 
-    const {redisConn, currentStringValue, currentSelectedKey} = connection;
+    const {redisConn, currentStringValue, currentSelectedKey, currentMode} = connection;
     const {theme} = global;
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const StringKey: React.FC<StringKeyProps> = ({
 
 
     return (
-        <Editor value={currentStringValue} language="text" editorRef={editorRef} theme={theme}/>
+        <Editor value={currentStringValue} language={currentMode} editorRef={editorRef} theme={theme}/>
     )
 }
 

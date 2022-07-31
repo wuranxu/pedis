@@ -1,12 +1,13 @@
-import { IconCoinMoneyStroked, IconGithubLogo, IconLanguage, IconMoon, IconSetting, IconSun } from '@douyinfe/semi-icons';
-import { Button, Nav, Space } from '@douyinfe/semi-ui';
-import React, { useEffect, useState } from 'react';
+import {IconCoinMoneyStroked, IconGithubLogo, IconLanguage, IconMoon, IconSetting, IconSun} from '@douyinfe/semi-icons';
+import {Button, Nav, Space} from '@douyinfe/semi-ui';
+import React, {useEffect} from 'react';
 import intl from 'react-intl-universal';
 import logo from '../../../assets/logo.svg';
-import { Lang } from '../../type.d.ts/Lang';
-import { ThemeType } from '../../type.d.ts/theme';
+import {Lang} from '../../type.d.ts/Lang';
+import {ThemeType} from '../../type.d.ts/theme';
 import {connect} from "dva";
 import {GlobalModelType, GlobalState} from "../../models/global";
+import {ConnectState} from "../../models/connect";
 
 interface PedisHeaderProps {
     lang: Lang;
@@ -17,13 +18,7 @@ interface PedisHeaderProps {
 const PedisHeader: React.FC<PedisHeaderProps> = ({lang, global, dispatch}: PedisHeaderProps) => {
 
     const {theme} = global;
-
-    // const getTheme = () => {
-    //     // get theme, default light
-    //     return localStorage.getItem("pedis-theme") || PedisTheme.light
-    // }
-
-    // const [mode, setMode] = useState<string>(getTheme());
+    console.log(theme)
 
     useEffect(() => {
         // const theme = getTheme()
@@ -49,12 +44,9 @@ const PedisHeader: React.FC<PedisHeaderProps> = ({lang, global, dispatch}: Pedis
         if (body.hasAttribute('theme-mode')) {
             body.removeAttribute('theme-mode');
             onChangeTheme(ThemeType.LIGHT)
-            // setMode(ThemeType.LIGHT);
-            // localStorage.setItem("pedis-theme", 'light')
         } else {
             body.setAttribute('theme-mode', ThemeType.DARK);
             onChangeTheme(ThemeType.DARK);
-            // localStorage.setItem("pedis-theme", ThemeType.DARK)
         }
     }
 
@@ -62,34 +54,34 @@ const PedisHeader: React.FC<PedisHeaderProps> = ({lang, global, dispatch}: Pedis
         <Nav
             mode='horizontal'
             header={{
-                logo: <img src={logo} />,
+                logo: <img src={logo}/>,
                 text: 'Pedis'
             }}
             footer={
                 <Space spacing={[24, 16]}>
-                    <Button type="tertiary" theme='borderless' icon={<IconGithubLogo />} onClick={() => {
+                    <Button type="tertiary" theme='borderless' icon={<IconGithubLogo/>} onClick={() => {
+                        // @ts-ignore
                         window.shell.openExternal('https://github.com/wuranxu/pedis')
                     }}>
                         Github
                     </Button>
-                    <Button type="primary" theme='borderless' icon={<IconSetting />}>
+                    <Button type="primary" theme='borderless' icon={<IconSetting/>}>
                         {intl.get("menu.settings")}
                     </Button>
-                    <Button type="danger" theme='borderless' icon={<IconCoinMoneyStroked />}>
+                    <Button type="danger" theme='borderless' icon={<IconCoinMoneyStroked/>}>
                         {intl.get("menu.sponsor")}
                     </Button>
                     <Button icon={
-                        theme === ThemeType.DARK ? <IconSun style={{ color: '#9C27B0' }} /> : <IconMoon style={{ color: '#6700ff' }} />
+                        theme === ThemeType.DARK ? <IconSun style={{color: '#9C27B0'}}/> : <IconMoon style={{color: '#6700ff'}}/>
                     } onClick={() => {
                         onSwitchMode()
                     }}>
                     </Button>
                     <Button type="tertiary" theme="borderless"
-                        onClick={() => {
-                            console.log(lang)
-                            lang.setLang(lang.lang === "zh" ? 'en' : 'zh')
-                        }}
-                        icon={<IconLanguage style={{ color: "#333" }} />}>
+                            onClick={() => {
+                                lang.setLang(lang.lang === "zh" ? 'en' : 'zh')
+                            }}
+                            icon={<IconLanguage style={{color: "#333"}}/>}>
                         {lang.lang === 'zh' ? 'EN' : '中文'}
                     </Button>
                     {/* <Dropdown
@@ -110,4 +102,4 @@ const PedisHeader: React.FC<PedisHeaderProps> = ({lang, global, dispatch}: Pedis
     )
 }
 
-export default connect(({ global }) => ({ global }))(PedisHeader);
+export default connect(({global}: ConnectState) => ({global}))(PedisHeader);

@@ -1,7 +1,8 @@
 import {Toast} from '@douyinfe/semi-ui';
 import intl from 'react-intl-universal';
-// import Redis from 'ioredis';
+
 let Redis = window.require('ioredis')
+
 
 interface RedisConnectionProps {
     name: string;
@@ -50,7 +51,7 @@ export default class RedisService {
         return data.split("\n")
     }
 
-    static async fetchKeys({redis, key}) {
+    static async fetchKeys({redis, key}: any) {
         let searchKey = key;
         if (key === undefined || key === '') {
             searchKey = `*`
@@ -66,12 +67,15 @@ export default class RedisService {
         return items;
     }
 
-    static async getString({redis, key}) {
+    static async getString({redis, key}: any) {
         return await redis.get(key);
     }
 
-    static async setString({redis, key, value}: any) {
-        return await redis.set(key, value)
+    static async setString({redis, key, value, ttl}: any) {
+        if (ttl === -1) {
+            return await redis.set(key, value)
+        }
+        return await redis.set(key, value, "EX", ttl)
     }
 
     static async renameKey({redis, old, now}: any) {
@@ -82,6 +86,10 @@ export default class RedisService {
         return await redis.ttl(key)
     }
 
+    static async deleteKey({redis, key}: any) {
+        return await redis.del(key)
+    }
+
     static async expireKey({redis, key, seconds}: any) {
         return await redis.expire(key, seconds)
     }
@@ -90,7 +98,7 @@ export default class RedisService {
         return await redis.persist(key)
     }
 
-    static async getType(redis, key: string) {
+    static async getType(redis: any, key: string) {
         return await redis.type(key);
     }
 

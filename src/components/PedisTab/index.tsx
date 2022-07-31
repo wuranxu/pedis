@@ -1,9 +1,10 @@
-import {IconEdit, IconRedo} from "@douyinfe/semi-icons";
-import {Button, Empty, TabPane, Tabs} from "@douyinfe/semi-ui";
+import {IconEdit, IconRedo, IconRefresh2} from "@douyinfe/semi-icons";
+import {Button, Empty, Space, TabPane, Tabs, Tooltip} from "@douyinfe/semi-ui";
 import RedisOperation from "../RedisOperation";
 import intl from 'react-intl-universal';
 import loadFailed from '../../../assets/image/loadFailed.svg'
 import RedisService from "../../service/redis";
+import {TabItemProps} from "../../type.d.ts/redis";
 
 interface RedisTabProps {
     activeKey: string | undefined;
@@ -12,11 +13,6 @@ interface RedisTabProps {
     selectedKeys: any;
     redisConn: any;
     currentConnection: any;
-}
-
-export declare interface TabItemProps {
-    key: string;
-    title: string;
 }
 
 
@@ -47,12 +43,26 @@ const RedisTab = ({activeKey, dispatch, tabList, selectedKeys, redisConn, curren
         })
     }
 
-    console.log("rerender")
+    const onReFreshKey = async () => {
+        await dispatch({
+            type: 'connection/loadKeys',
+            payload: {
+                redis: redisConn, key: ''
+            }
+        })
+    }
 
     return (
         <Tabs
             // lazyRender
             // keepDOM={false}
+            tabBarExtraContent={
+                <Space>
+                    <Tooltip position="left" content={intl.get("key.tab.reload")}>
+                        <IconRefresh2 onClick={onReFreshKey}
+                                      style={{color: 'var(--semi-color-primary)', cursor: 'pointer', fontSize: 14}}/>
+                    </Tooltip>
+                </Space>}
             style={{width: '95%'}}
             type="card"
             collapsible={true}

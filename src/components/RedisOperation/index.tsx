@@ -15,12 +15,13 @@ interface RedisOperationProps {
 }
 
 
-const RedisOperation = ({connection, dispatch}: RedisOperationProps) => {
-    const {redisConn, activeRedisKey, currentSelectedKey} = connection;
+const RedisOperation = ({connection}: RedisOperationProps) => {
+    const {currentSelectedKey} = connection;
 
     console.log("render2")
 
     return <div className="keyBody">
+        {/*@ts-ignore*/}
         <SplitPane className="key-split" split="vertical" minSize={200} defaultSize={260} maxSize={600}>
             <div>
                 <KeyTree/>

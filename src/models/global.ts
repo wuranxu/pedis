@@ -4,8 +4,7 @@ enum LanguageProps {
 }
 
 export interface GlobalState {
-    // theme
-    theme: 'light' | 'dark';
+    theme: string;
     language: LanguageProps;
 }
 
@@ -20,7 +19,6 @@ export type GlobalModelType = {
 const Model: GlobalModelType = {
     namespace: 'global',
     state: {
-        // @ts-ignore
         theme: localStorage.getItem("pedis-theme") || 'light',
         language: LanguageProps.zh
     },

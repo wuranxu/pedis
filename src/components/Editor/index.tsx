@@ -10,7 +10,7 @@ interface EditorProps {
     options?: any;
     theme?: string | 'vs-dark';
     height?: string | '360';
-    language?: string | 'json';
+    language?: string | 'text';
 }
 
 
@@ -21,6 +21,7 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
     const {editorRef: monacoEl} = props;
 
     useEffect(() => {
+        console.log(props.theme)
         if (monacoEl && !editor) {
             const editorNow = monaco.editor.create(monacoEl.current!, {
                 value: props.value,
@@ -28,7 +29,7 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
                 automaticLayout: true,
                 theme: props.theme === ThemeType.LIGHT ? 'vs-light' : 'vs-dark',
                 selectOnLineNumbers: true,
-                maxTokenizationLineLength: 10000,
+                maxTokenizationLineLength: 100000,
             })
             setEditor(editorNow);
             monacoEl.editor = editorNow;
@@ -42,9 +43,17 @@ const Editor: React.FC<EditorProps> = (props: EditorProps) => {
     }, [props.value])
 
     useEffect(() => {
-        console.log(props.theme)
         editor?.updateOptions({theme: props.theme === ThemeType.LIGHT ? 'vs-light' : 'vs-dark'})
     }, [props.theme])
+
+    useEffect(() => {
+        if (editor !== null) {
+            const model = editor?.getModel()
+            if (model) {
+                monaco.editor.setModelLanguage(model, props.language as string)
+            }
+        }
+    }, [props.language])
 
     return (
         <div id="pedis-monaco" ref={monacoEl}>

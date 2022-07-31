@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import "./index.css";
 import App from './pages/App';
 import '@icon-park/react/styles/index.css';
+// @ts-ignore
 import createLoading from 'dva-loading';
 
 import { LocaleProvider } from '@douyinfe/semi-ui';
