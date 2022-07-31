@@ -1,9 +1,10 @@
-import { IconEdit, IconRedo } from "@douyinfe/semi-icons";
-import { Button, Empty, TabPane, Tabs } from "@douyinfe/semi-ui";
+import {IconEdit, IconRedo, IconRefresh2} from "@douyinfe/semi-icons";
+import {Button, Empty, Space, TabPane, Tabs, Tooltip} from "@douyinfe/semi-ui";
 import RedisOperation from "../RedisOperation";
 import intl from 'react-intl-universal';
 import loadFailed from '../../../assets/image/loadFailed.svg'
 import RedisService from "../../service/redis";
+import {TabItemProps} from "../../type.d.ts/redis";
 
 interface RedisTabProps {
     activeKey: string | undefined;
@@ -14,53 +15,8 @@ interface RedisTabProps {
     currentConnection: any;
 }
 
-export declare interface TabItemProps {
-    key: string;
-    title: string;
-}
 
-
-const RedisTab = ({ activeKey, dispatch, tabList, selectedKeys, redisConn, currentConnection }: RedisTabProps) => {
-
-    const emptyData = () => {
-        return <Empty
-            image={<img src={loadFailed} style={{ height: '190%', width: '100%' }} />}
-            darkModeImage={<img src={loadFailed} style={{ height: '190%', width: '100%' }} />}
-            title={intl.get("empty.no_available_redis")}
-            description={intl.get("empty.no_available_redis.desc")}
-        >
-            <div>
-                <Button
-                    onClick={async () => {
-                        await RedisService.open({
-                            name: currentConnection.name,
-                            host: currentConnection.host,
-                            port: currentConnection.port,
-                            password: currentConnection.password,
-                            dispatch: dispatch,
-                        });
-                    }}
-                    style={{ padding: '0 24px', marginLeft: 24 }} theme="solid" type="primary" icon={<IconRedo />}>
-                    {intl.get("empty.reconnect_redis")}
-                </Button>
-                <Button style={{ padding: '0 24px', marginLeft: 12 }}
-                    onClick={() => {
-                        dispatch({
-                            type: 'connection/save',
-                            payload: {
-                                visible: true,
-                                mode: "edit"
-                            }
-                        })
-                    }}
-                    type="primary"
-                    icon={<IconEdit />}>
-                    {intl.get("empty.edit_redis")}
-                </Button>
-
-            </div>
-        </Empty>
-    }
+const RedisTab = ({activeKey, dispatch, tabList, selectedKeys, redisConn, currentConnection}: RedisTabProps) => {
 
     const onCloseTab = (key: string) => {
         const idx = tabList.findIndex(item => item.key === key);
@@ -70,7 +26,7 @@ const RedisTab = ({ activeKey, dispatch, tabList, selectedKeys, redisConn, curre
         const temp = [...tabList];
         temp.splice(idx, 1)
         let currentKey = activeKey;
-        const currentTreeKey = { ...selectedKeys }
+        const currentTreeKey = {...selectedKeys}
         if (key === activeKey) {
             // need change activeKey
             if (temp.length === 0) {
@@ -83,20 +39,31 @@ const RedisTab = ({ activeKey, dispatch, tabList, selectedKeys, redisConn, curre
         }
         dispatch({
             type: 'connection/save',
-            payload: { tabList: temp, activeKey: currentKey, selectedKeys: currentTreeKey }
+            payload: {tabList: temp, activeKey: currentKey, selectedKeys: currentTreeKey}
         })
     }
 
-    const getComponent = () => {
-        if (redisConn === null) {
-            return emptyData()
-        }
-        return <RedisOperation />
+    const onReFreshKey = async () => {
+        await dispatch({
+            type: 'connection/loadKeys',
+            payload: {
+                redis: redisConn, key: ''
+            }
+        })
     }
 
     return (
         <Tabs
-            style={{ width: '95%' }}
+            // lazyRender
+            // keepDOM={false}
+            tabBarExtraContent={
+                <Space>
+                    <Tooltip position="left" content={intl.get("key.tab.reload")}>
+                        <IconRefresh2 onClick={onReFreshKey}
+                                      style={{color: 'var(--semi-color-primary)', cursor: 'pointer', fontSize: 14}}/>
+                    </Tooltip>
+                </Space>}
+            style={{width: '95%'}}
             type="card"
             collapsible={true}
             activeKey={activeKey}
@@ -107,7 +74,7 @@ const RedisTab = ({ activeKey, dispatch, tabList, selectedKeys, redisConn, curre
                 dispatch({
                     type: 'connection/save',
                     payload: {
-                        activeKey: key, selectedKeys: { value: key }, currentConnection: {
+                        activeKey: key, selectedKeys: {value: key}, currentConnection: {
                             uid: tabList[idx].key,
                             password: tabList[idx].data.password,
                             name: tabList[idx].data.name, port: tabList[idx].data.port,
@@ -126,7 +93,45 @@ const RedisTab = ({ activeKey, dispatch, tabList, selectedKeys, redisConn, curre
         >
             {tabList.map(tab => (
                 <TabPane closable tab={tab.title} itemKey={tab.key} key={tab.key}>
-                    {getComponent()}
+                    {
+                        redisConn === null ? <Empty
+                            image={<img src={loadFailed} style={{height: '190%', width: '100%'}}/>}
+                            darkModeImage={<img src={loadFailed} style={{height: '190%', width: '100%'}}/>}
+                            title={intl.get("empty.no_available_redis")}
+                            description={intl.get("empty.no_available_redis.desc")}
+                        >
+                            <div>
+                                <Button
+                                    onClick={async () => {
+                                        await RedisService.open({
+                                            name: currentConnection.name,
+                                            host: currentConnection.host,
+                                            port: currentConnection.port,
+                                            password: currentConnection.password,
+                                            dispatch: dispatch,
+                                        });
+                                    }}
+                                    style={{padding: '0 24px', marginLeft: 24}} theme="solid" type="primary"
+                                    icon={<IconRedo/>}>
+                                    {intl.get("empty.reconnect_redis")}
+                                </Button>
+                                <Button style={{padding: '0 24px', marginLeft: 12}}
+                                        onClick={() => {
+                                            dispatch({
+                                                type: 'connection/save',
+                                                payload: {
+                                                    visible: true,
+                                                    mode: "edit"
+                                                }
+                                            })
+                                        }}
+                                        type="primary"
+                                        icon={<IconEdit/>}>
+                                    {intl.get("empty.edit_redis")}
+                                </Button>
+                            </div>
+                        </Empty> : <RedisOperation/>
+                    }
                 </TabPane>
             ))}
         </Tabs>

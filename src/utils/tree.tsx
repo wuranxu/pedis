@@ -79,11 +79,11 @@ const TreeLabel = (props: TreeNode) => {
                         clickToHide={true}
                         render={
                             <Dropdown.Menu>
-                                <Dropdown.Item icon={<IconPlay />} onClick={(e) => {
-                                    e.stopPropagation()
-                                }}>
-                                    {intl.get("tree.operation.open")}
-                                </Dropdown.Item>
+                                {/*<Dropdown.Item icon={<IconPlay />} onClick={(e) => {*/}
+                                {/*    e.stopPropagation()*/}
+                                {/*}}>*/}
+                                {/*    {intl.get("tree.operation.open")}*/}
+                                {/*</Dropdown.Item>*/}
                                 <Dropdown.Item icon={<IconSend />} onClick={(e) => {
                                     e.stopPropagation();
                                     onTest()

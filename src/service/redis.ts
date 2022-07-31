@@ -1,7 +1,8 @@
-import { Toast } from '@douyinfe/semi-ui';
+import {Toast} from '@douyinfe/semi-ui';
 import intl from 'react-intl-universal';
-// import Redis from 'ioredis';
+
 let Redis = window.require('ioredis')
+
 
 interface RedisConnectionProps {
     name: string;
@@ -15,7 +16,7 @@ export default class RedisService {
     static cache = new Map();
 
     static getKey(params: RedisConnectionProps) {
-        const { name, host, port, password } = params;
+        const {name, host, port, password} = params;
         return `${name}_${host}_${port}_${password}`
     }
 
@@ -50,32 +51,54 @@ export default class RedisService {
         return data.split("\n")
     }
 
-    static async fetchKeys({ redis, key }) {
+    static async fetchKeys({redis, key}: any) {
         let searchKey = key;
         if (key === undefined || key === '') {
             searchKey = `*`
+        } else if (key.indexOf("*") === -1) {
+            searchKey = `*${key}*`
         }
         const keys = await redis.keys(searchKey)
         const items = []
         for await (const key of keys) {
             const tp = await RedisService.getType(redis, key)
-            items.push({ name: key, type: tp.toUpperCase() })
+            items.push({name: key, type: tp.toUpperCase()})
         }
-        console.log(items)
         return items;
     }
 
-    static async getString({ redis, key }) {
-        const result = await redis.get(key)
-        return result;
+    static async getString({redis, key}: any) {
+        return await redis.get(key);
     }
 
-    static async setString({redis, key, value}: any) {
-        const result = await redis.set(key, value)
-        return result
+    static async setString({redis, key, value, ttl}: any) {
+        if (ttl === -1) {
+            return await redis.set(key, value)
+        }
+        return await redis.set(key, value, "EX", ttl)
     }
 
-    static async getType(redis, key: string) {
+    static async renameKey({redis, old, now}: any) {
+        return await redis.rename(old, now)
+    }
+
+    static async ttl({redis, key}: any) {
+        return await redis.ttl(key)
+    }
+
+    static async deleteKey({redis, key}: any) {
+        return await redis.del(key)
+    }
+
+    static async expireKey({redis, key, seconds}: any) {
+        return await redis.expire(key, seconds)
+    }
+
+    static async persist({redis, key}: any) {
+        return await redis.persist(key)
+    }
+
+    static async getType(redis: any, key: string) {
         return await redis.type(key);
     }
 
@@ -85,7 +108,7 @@ export default class RedisService {
             redis.disconnect()
             dispatch({
                 type: "connection/save",
-                payload: { treeLoading: false }
+                payload: {treeLoading: false}
             })
             if (setRedis) {
                 dispatch({
@@ -100,7 +123,7 @@ export default class RedisService {
             await redis.ping()
             dispatch({
                 type: "connection/save",
-                payload: { treeLoading: false }
+                payload: {treeLoading: false}
             })
             if (setRedis) {
                 dispatch({

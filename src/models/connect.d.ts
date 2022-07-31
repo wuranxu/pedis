@@ -1,6 +1,7 @@
-import type { ConnectionState } from './connection';
+import type {ConnectionState} from './connection';
+import type {GlobalState} from './global';
 
-export { ConnectionState };
+export {ConnectionState};
 
 export type Loading = {
     global: boolean;
@@ -11,6 +12,7 @@ export type Loading = {
 };
 
 export type ConnectState = {
-    connection: ConnectionState,
+    connection?: ConnectionState,
+    global?: GlobalState,
     loading: Loading;
 };

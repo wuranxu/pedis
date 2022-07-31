@@ -1,0 +1,18 @@
+.semi-icon-copy_stroked {
+    color: var(--semi-color-success);
+    font-size: 18px !important;
+}
+
+.icon-right {
+    height: 18px;
+    line-height: 18px;
+    display: inline-block;
+    margin-left: 6px;
+}
+
+.key-title {
+    display: inline-block;
+    font-size: 14px;
+    width: 86%;
+    font-weight: 600;
+}
